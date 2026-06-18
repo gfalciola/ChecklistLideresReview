@@ -692,7 +692,7 @@ function renderDashboard(data) {
 
   // Nota
   document.getElementById('nota-fiabilidad').innerHTML =
-    `<strong>Nota de fiabilidad:</strong> n=${n} respuestas de Argentina (muestra menor que México, n=387). Porcentajes = conteo directo. El ${Math.round(rows.filter(r=>(r[headers.indexOf("Número de revisión")]||"").toString().includes("1")).length/n*100)}% son Revisión 1: ciclo en arranque. Datos auto-reportados, sin auditoría independiente.`;
+    `<strong>Nota de fiabilidad:</strong> n=${n} respuestas de Argentina. Porcentajes = conteo directo (Sí ÷ total respondido × 100). Datos auto-reportados, sin auditoría independiente.`;
 
   // EMBUDO
   const embudo = [
@@ -710,7 +710,7 @@ function renderDashboard(data) {
       </div>
     </div>`).join('');
   document.getElementById('embudo-note').textContent =
-    `Cae de ${descargo}% que la descargó a ${revisaJ}% que la revisa semanalmente. La brecha Argentina es más profunda que México (67%→28%): alta conciencia, casi nula ejecución semanal.`;
+    `Cae de ${descargo}% que la descargó a ${revisaJ}% que la revisa semanalmente. Alta conciencia del método, casi nula ejecución semanal: el cuello de botella está en el hábito, no en el acceso.`;
 
   // DONUTS
   donutChart('chartEnfoque',
@@ -837,8 +837,8 @@ function renderDashboard(data) {
     },
     {
       tipo: "fortaleza",
-      titulo: `Orientación a prospección más sana que México`,
-      texto: `${prospeccion}% declara que su ingreso depende de prospección vs. ${promociones}% de promociones — patrón inverso a México (50% promociones). Argentina ya tiene la base conceptual correcta.`
+      titulo: "Orientación a prospección sólida",
+      texto: `${prospeccion}% declara que su ingreso depende de prospección vs. ${promociones}% de promociones. Argentina tiene la base conceptual correcta para la nueva estrategia.`
     },
     {
       tipo: "fortaleza",
