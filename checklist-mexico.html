@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist Líderes · México</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #C0392B;
+    --red-dark: #96281B;
+    --red-light: #FAECE7;
+    --green: #1D9E75;
+    --green-light: #E1F5EE;
+    --orange: #BA7517;
+    --orange-light: #FAEEDA;
+    --gray-bg: #F7F6F3;
+    --gray-border: #E4E2DC;
+    --text: #1A1A1A;
+    --text-muted: #6B6B6B;
+    --white: #FFFFFF;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--gray-bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--red);
+    color: white;
+    padding: 3rem 2rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: -40px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.75;
+    margin-bottom: 0.5rem;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 0.5rem;
+  }
+  .hero-sub {
+    font-size: 13px;
+    opacity: 0.8;
+    margin-bottom: 2rem;
+  }
+  .hero-brecha {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .hero-brecha-label {
+    font-size: 11px;
+    opacity: 0.75;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.25rem;
+  }
+  .hero-brecha-nums {
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .hero-brecha-desc {
+    font-size: 12px;
+    opacity: 0.75;
+    margin-top: 0.2rem;
+  }
+  .hero-loading {
+    font-size: 13px;
+    opacity: 0.8;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* KPI STRIP */
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 1px;
+    background: var(--gray-border);
+    border-bottom: 1px solid var(--gray-border);
+  }
+  .kpi-cell {
+    background: var(--white);
+    padding: 1.25rem 1rem;
+    text-align: center;
+  }
+  .kpi-val {
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .kpi-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    line-height: 1.3;
+  }
+  .kpi-cell.red .kpi-val { color: var(--red); }
+  .kpi-cell.green .kpi-val { color: var(--green); }
+  .kpi-cell.orange .kpi-val { color: var(--orange); }
+
+  /* CONTENT */
+  .container { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  /* SECTION */
+  .section { margin-bottom: 2.5rem; }
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gray-border);
+  }
+
+  /* EMBUDO */
+  .embudo {
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .embudo-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    color: var(--text);
+  }
+  .embudo-step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .embudo-label {
+    width: 160px;
+    font-size: 12px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    text-align: right;
+  }
+  .embudo-bar-wrap {
+    flex: 1;
+    height: 28px;
+    background: #F0EEE8;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+  .embudo-bar {
+    height: 100%;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    transition: width 1s ease;
+    width: 0;
+  }
+  .embudo-note {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 0.75rem;
+  }
+
+  /* CHARTS */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  @media (max-width: 600px) { .charts-grid { grid-template-columns: 1fr; } }
+  .chart-card {
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+    border-radius: 12px;
+    padding: 1.25rem;
+  }
+  .chart-card-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 1rem;
+  }
+
+  /* HORIZONTAL BAR LIST */
+  .bar-list { display: flex; flex-direction: column; gap: 7px; }
+  .bar-row { display: flex; align-items: center; gap: 8px; }
+  .bar-row-label {
+    font-size: 11.5px;
+    color: var(--text);
+    width: 155px;
+    flex-shrink: 0;
+    line-height: 1.25;
+  }
+  .bar-row-track {
+    flex: 1;
+    height: 18px;
+    background: #F0EEE8;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .bar-row-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s ease;
+    width: 0;
+  }
+  .bar-row-pct {
+    font-size: 11.5px;
+    font-weight: 600;
+    width: 32px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* CONCLUSIONES */
+  .conclusion-list { display: flex; flex-direction: column; gap: 10px; }
+  .conclusion-item {
+    display: flex;
+    gap: 12px;
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    align-items: flex-start;
+  }
+  .conclusion-item.critico { border-left: 3px solid var(--red); }
+  .conclusion-item.atencion { border-left: 3px solid var(--orange); }
+  .conclusion-item.fortaleza { border-left: 3px solid var(--green); }
+  .conclusion-badge {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 7px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .critico .conclusion-badge { background: var(--red-light); color: var(--red-dark); }
+  .atencion .conclusion-badge { background: var(--orange-light); color: #7A4A0A; }
+  .fortaleza .conclusion-badge { background: var(--green-light); color: #0A5A3A; }
+  .conclusion-body {}
+  .conclusion-title { font-size: 13.5px; font-weight: 600; margin-bottom: 3px; }
+  .conclusion-text { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+
+  /* RECOMENDACIONES */
+  .rec-list { display: flex; flex-direction: column; gap: 8px; }
+  .rec-item {
+    display: flex;
+    gap: 12px;
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    align-items: flex-start;
+  }
+  .rec-num {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--red);
+    flex-shrink: 0;
+    line-height: 1;
+    margin-top: 1px;
+    width: 20px;
+  }
+  .rec-title { font-size: 13.5px; font-weight: 600; margin-bottom: 3px; }
+  .rec-text { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+
+  /* DIRECTOR TABLE */
+  .dir-table { width: 100%; border-collapse: collapse; }
+  .dir-table th {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--gray-border);
+    font-weight: 500;
+  }
+  .dir-table td {
+    padding: 10px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--gray-border);
+    vertical-align: middle;
+  }
+  .dir-table tr:last-child td { border-bottom: none; }
+  .mini-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .mini-bar-track {
+    flex: 1;
+    height: 8px;
+    background: #F0EEE8;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .mini-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+  }
+  .mini-bar-pct { font-size: 12px; font-weight: 600; width: 36px; }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--gray-border);
+    line-height: 1.6;
+  }
+
+  /* NOTA */
+  .nota {
+    background: #FFFBEB;
+    border: 1px solid #F9D46A;
+    border-radius: 8px;
+    padding: 0.875rem 1rem;
+    font-size: 12px;
+    color: #7A5A00;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+
+  /* DONUT */
+  .donut-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+  .donut-legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text-muted); }
+  .donut-swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="hero" id="hero">
+  <div class="hero-eyebrow">Just América · Checklist Líderes · Plan 90 días</div>
+  <h1 class="hero-title">México</h1>
+  <p class="hero-sub" id="hero-sub">Cargando datos...</p>
+  <div id="hero-loading" class="hero-loading">
+    <div class="spinner"></div>
+    Consultando respuestas...
+  </div>
+  <div id="hero-brecha" class="hero-brecha" style="display:none">
+    <div class="hero-brecha-label">Brecha crítica · Embudo CIMAS</div>
+    <div class="hero-brecha-nums" id="brecha-nums">—</div>
+    <div class="hero-brecha-desc">Conoce la guía → la aplica cada jueves</div>
+  </div>
+</div>
+
+<div class="kpi-strip" id="kpi-strip" style="display:none">
+  <div class="kpi-cell red">
+    <div class="kpi-val" id="kpi-n">—</div>
+    <div class="kpi-label">Respuestas</div>
+  </div>
+  <div class="kpi-cell">
+    <div class="kpi-val" id="kpi-dir">—</div>
+    <div class="kpi-label">Directores</div>
+  </div>
+  <div class="kpi-cell green">
+    <div class="kpi-val" id="kpi-descargo">—</div>
+    <div class="kpi-label">Descargó guía CIMAS</div>
+  </div>
+  <div class="kpi-cell orange">
+    <div class="kpi-val" id="kpi-revisa">—</div>
+    <div class="kpi-label">Revisa jueves CIMAS</div>
+  </div>
+  <div class="kpi-cell">
+    <div class="kpi-val" id="kpi-enfoque">—</div>
+    <div class="kpi-label">Enfoque pleno</div>
+  </div>
+  <div class="kpi-cell green">
+    <div class="kpi-val" id="kpi-prospeccion">—</div>
+    <div class="kpi-label">Depende de prospección</div>
+  </div>
+</div>
+
+<div class="container" id="main-content" style="display:none">
+
+  <div class="nota" id="nota-fiabilidad"></div>
+
+  <!-- EMBUDO CIMAS -->
+  <div class="section">
+    <div class="section-title">Embudo de implementación CIMAS</div>
+    <div class="embudo">
+      <div class="embudo-title">De conocer la guía a aplicarla cada semana</div>
+      <div id="embudo-steps"></div>
+      <p class="embudo-note" id="embudo-note"></p>
+    </div>
+  </div>
+
+  <!-- CHARTS ROW -->
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-card-title">Enfoque personal</div>
+      <div style="position:relative; height:160px;">
+        <canvas id="chartEnfoque" role="img" aria-label="Donut chart de nivel de enfoque personal"></canvas>
+      </div>
+      <div class="donut-legend" id="legend-enfoque"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-title">Fuente de ingreso declarada</div>
+      <div style="position:relative; height:160px;">
+        <canvas id="chartIngreso" role="img" aria-label="Donut chart de fuente de ingreso"></canvas>
+      </div>
+      <div class="donut-legend" id="legend-ingreso"></div>
+    </div>
+  </div>
+
+  <!-- PRÁCTICAS INDIVIDUALES -->
+  <div class="section">
+    <div class="section-title">Prácticas individuales del líder</div>
+    <div class="chart-card">
+      <div class="bar-list" id="bars-individual"></div>
+    </div>
+  </div>
+
+  <!-- LIDERAZGO / DUPLICACIÓN -->
+  <div class="section">
+    <div class="section-title">Liderazgo de equipo y duplicación</div>
+    <div class="chart-card">
+      <div class="bar-list" id="bars-liderazgo"></div>
+    </div>
+  </div>
+
+  <!-- POR DIRECTOR -->
+  <div class="section">
+    <div class="section-title">CIMAS por director</div>
+    <div class="chart-card">
+      <table class="dir-table" id="dir-table">
+        <thead>
+          <tr>
+            <th>Director</th>
+            <th>N</th>
+            <th>Descargó CIMAS</th>
+            <th>Revisa jueves</th>
+          </tr>
+        </thead>
+        <tbody id="dir-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- CONCLUSIONES -->
+  <div class="section">
+    <div class="section-title">Conclusiones estratégicas</div>
+    <div class="conclusion-list" id="conclusiones"></div>
+  </div>
+
+  <!-- RECOMENDACIONES -->
+  <div class="section">
+    <div class="section-title">Recomendaciones priorizadas</div>
+    <div class="rec-list" id="recomendaciones"></div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Generado a partir de CheckList_Líderes (Responses) · Argentina · Datos auto-reportados, sin auditoría independiente.<br>
+  Porcentajes = conteo directo (Sí ÷ total respondido × 100). Priorización por tamaño de brecha, no validada con el negocio.
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const ENDPOINT = "https://script.google.com/macros/s/AKfycbxZe_44XNkXtwSbA4hfVe_fRF3ZqZxgJB-5fftq2djQrFaGArtK_GL0_mEVKLsj76cv/exec";
+const PAIS = "Mexico";
+
+const RED = "#C0392B";
+const GREEN = "#1D9E75";
+const ORANGE = "#BA7517";
+const BLUE = "#185FA5";
+const GRAY = "#B4B2A9";
+
+function pct(rows, colIdx, val) {
+  if (!rows.length) return 0;
+  const count = rows.filter(r => (r[colIdx] || "").toString().trim().toLowerCase() === val.toLowerCase()).length;
+  return Math.round(count / rows.length * 100);
+}
+
+function pctContains(rows, colIdx, fragment) {
+  if (!rows.length) return 0;
+  const count = rows.filter(r => (r[colIdx] || "").toString().toLowerCase().includes(fragment.toLowerCase())).length;
+  return Math.round(count / rows.length * 100);
+}
+
+function barColor(v) {
+  if (v >= 60) return GREEN;
+  if (v >= 35) return ORANGE;
+  return RED;
+}
+
+function renderBar(label, pctVal) {
+  return `<div class="bar-row">
+    <span class="bar-row-label">${label}</span>
+    <div class="bar-row-track">
+      <div class="bar-row-fill" style="background:${barColor(pctVal)}" data-pct="${pctVal}"></div>
+    </div>
+    <span class="bar-row-pct" style="color:${barColor(pctVal)}">${pctVal}%</span>
+  </div>`;
+}
+
+function animateBars() {
+  document.querySelectorAll('[data-pct]').forEach(el => {
+    const v = el.dataset.pct;
+    setTimeout(() => { el.style.width = v + '%'; }, 100);
+  });
+}
+
+function donutChart(canvasId, labels, values, colors) {
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: colors,
+        borderWidth: 2,
+        borderColor: '#fff',
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '65%',
+      plugins: { legend: { display: false }, tooltip: {
+        callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` }
+      }}
+    }
+  });
+}
+
+function renderLegend(containerId, labels, values, colors) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = labels.map((l, i) =>
+    `<span class="donut-legend-item">
+      <span class="donut-swatch" style="background:${colors[i]}"></span>${l} ${values[i]}%
+    </span>`
+  ).join('');
+}
+
+async function loadData() {
+  try {
+    const url = `${ENDPOINT}?action=pais&pais=${encodeURIComponent(PAIS)}`;
+    const res = await fetch(url);
+    const json = await res.json();
+    renderDashboard(json);
+  } catch(e) {
+    document.getElementById('hero-loading').innerHTML =
+      '<span style="color:rgba(255,255,255,0.8)">Error al cargar datos. Verificá la conexión e intentá de nuevo.</span>';
+  }
+}
+
+function renderDashboard(data) {
+  const headers = data.headers.map(h => h.toString().trim());
+  const rows = data.rows;
+  const n = rows.length;
+
+  const idx = name => headers.findIndex(h => h.toLowerCase().includes(name.toLowerCase()));
+
+  const iDescargo    = idx("Descargaste y estudiaste la Guía CIMAS");
+  const iPlanifica5  = idx("planificando actividades en cada una de las 5 etapas");
+  const iRevisaJueves = idx("Revisas y analizas tu semana anterior cada jueves");
+  const iPlanificaJueves = idx("Planificas tu semana siguiente cada jueves");
+  const iSeguimCIMAS = idx("seguimiento a cada consultor de tu grupo utilizando la metodología CIMAS");
+  const iEnfoque     = idx("nivel de enfoque");
+  const iIngreso     = idx("ingreso depende principalmente");
+  const iMateriales  = idx("materiales necesarios");
+  const i3exp        = idx("realizando al menos 3 Experiencias");
+  const iExpress     = idx("realizaste la nueva Experiencia Express");
+  const iHable       = idx("Hoy hablé de Just");
+  const iMeta        = idx("meta relacionada con los viajes de incentivo");
+  const iBio         = idx("biografía (bio)");
+  const iEnlacePub   = idx("publicaciones incluyen tu enlace personal");
+  const iMarca       = idx("Publicas contenido en redes sociales que construye tu marca");
+  const iDemo        = idx("demostración sensorial");
+  const iCTA         = idx("llamada a la acción");
+  const iGuiaExp     = idx("Explorando la Oportunidad");
+  const iComparte    = idx("historia personal de transformación");
+  const iExpNuevas   = idx("Experiencias Just que nunca habías hecho");
+  const iRegistra    = idx("Registras evidencia");
+  const iCaptador    = idx("captador de contactos");
+  const iAvanza      = idx("formación Just, completando cursos");
+  const iTalento     = idx("identificando dentro de tu equipo personas con potencial");
+  const iBloqueos    = idx("bloqueos emocionales");
+  const iConstruye   = idx("nueva propuesta de valor");
+  const iMetaEquipo  = idx("todo en tu equipo tienen clara su meta");
+  const iReconoce    = idx("Reconoces y celebras públicamente");
+  const iAcompana    = idx("Acompañas a los consultores");
+  const iNuevasGuias = idx("equipo está utilizando también las nuevas Guías");
+  const iCasos       = idx("Compartes casos reales");
+  const iCorrige     = idx("metodología CIMAS para corregir");
+  const iCursos      = idx("consultores realizan entre 2 y 3 cursos");
+  const iAceler      = idx("Programa de Aceleración Digital");
+  const iMide        = idx("midiendo el crecimiento de unidades");
+  const iEspera      = idx("Estás esperando las promociones");
+  const iFoco        = idx("manteniendo el foco");
+  const iEntrena     = idx("entrenando y acompañando");
+  const iEnergia     = idx("transmitiendo energía positiva");
+  const iDirector    = idx("Director responsable");
+  const iPais        = headers.indexOf("País:");
+
+  const pS = (i) => pct(rows, i, "Sí");
+
+  const descargo     = pS(iDescargo);
+  const planifica5   = pS(iPlanifica5);
+  const planificaJ   = pS(iPlanificaJueves);
+  const revisaJ      = pS(iRevisaJueves);
+  const seguimCIMAS  = pS(iSeguimCIMAS);
+  const siempre      = pctContains(rows, iEnfoque, "siempre");
+  const prospeccion  = pctContains(rows, iIngreso, "prospecc");
+  const promociones  = pctContains(rows, iIngreso, "promoci");
+  const mixto        = 100 - prospeccion - promociones;
+
+  // KPIs
+  document.getElementById('kpi-n').textContent = n;
+  const directores = [...new Set(rows.map(r => (r[iDirector]||"").toString().trim()))].filter(Boolean);
+  document.getElementById('kpi-dir').textContent = directores.length;
+  document.getElementById('kpi-descargo').textContent = descargo + '%';
+  document.getElementById('kpi-revisa').textContent = revisaJ + '%';
+  document.getElementById('kpi-enfoque').textContent = siempre + '%';
+  document.getElementById('kpi-prospeccion').textContent = prospeccion + '%';
+
+  // Hero
+  document.getElementById('hero-loading').style.display = 'none';
+  document.getElementById('hero-sub').textContent = `Plan de 90 días · CIMAS, nuevas guías y Estrategia SwissJust · ${n} respuestas`;
+  document.getElementById('hero-brecha').style.display = 'inline-block';
+  document.getElementById('brecha-nums').textContent = `${descargo}% → ${revisaJ}%`;
+  document.getElementById('kpi-strip').style.display = 'grid';
+  document.getElementById('main-content').style.display = 'block';
+
+  // Nota
+  document.getElementById('nota-fiabilidad').innerHTML =
+    `<strong>Nota de fiabilidad:</strong> n=${n} respuestas de Argentina. Porcentajes = conteo directo (Sí ÷ total respondido × 100). Datos auto-reportados, sin auditoría independiente.`;
+
+  // EMBUDO
+  const embudo = [
+    { label: "Descargó la guía", val: descargo, color: GREEN },
+    { label: "Planifica 5 etapas", val: planifica5, color: "#5DADE2" },
+    { label: "Planifica los jueves", val: planificaJ, color: ORANGE },
+    { label: "Revisa los jueves", val: revisaJ, color: RED },
+    { label: "Seguim. CIMAS al equipo", val: seguimCIMAS, color: "#8E44AD" },
+  ];
+  document.getElementById('embudo-steps').innerHTML = embudo.map(e => `
+    <div class="embudo-step">
+      <span class="embudo-label">${e.label}</span>
+      <div class="embudo-bar-wrap">
+        <div class="embudo-bar" data-pct="${e.val}" style="background:${e.color}">${e.val}%</div>
+      </div>
+    </div>`).join('');
+  document.getElementById('embudo-note').textContent =
+    `Cae de ${descargo}% que la descargó a ${revisaJ}% que la revisa semanalmente. Alta conciencia del método, casi nula ejecución semanal: el cuello de botella está en el hábito, no en el acceso.`;
+
+  // DONUTS
+  donutChart('chartEnfoque',
+    ['Siempre enfocado', 'A veces'],
+    [siempre, 100 - siempre],
+    [GREEN, GRAY]);
+  renderLegend('legend-enfoque',
+    ['Siempre', 'A veces'],
+    [siempre, 100 - siempre],
+    [GREEN, GRAY]);
+
+  donutChart('chartIngreso',
+    ['Prospección', 'Promociones', 'Mixto'],
+    [prospeccion, promociones, Math.max(0, mixto)],
+    [GREEN, RED, BLUE]);
+  renderLegend('legend-ingreso',
+    ['Prospección', 'Promociones', 'Mixto'],
+    [prospeccion, promociones, Math.max(0, mixto)],
+    [GREEN, RED, BLUE]);
+
+  // PRÁCTICAS INDIVIDUALES
+  const pracs = [
+    ["Materiales listos", pS(iMateriales)],
+    ["Hablé de Just hoy", pS(iHable)],
+    ["3+ Experiencias/sem", pS(i3exp)],
+    ["Experiencia Express", pS(iExpress)],
+    ["Publica marca personal", pS(iMarca)],
+    ["Exp. nuevas (zona confort)", pS(iExpNuevas)],
+    ["Registra evidencia", pS(iRegistra)],
+    ["Bio con enlace", pS(iBio)],
+    ["CTA en publicaciones", pS(iCTA)],
+    ["Demo. sensorial", pS(iDemo)],
+    ["Guía Explorando Op.", pS(iGuiaExp)],
+    ["Comparte historia personal", pS(iComparte)],
+    ["Avanza en formación", pS(iAvanza)],
+    ["Enlace en publicaciones", pS(iEnlacePub)],
+    ["Captador de contactos", pS(iCaptador)],
+  ].sort((a,b) => b[1]-a[1]);
+  document.getElementById('bars-individual').innerHTML = pracs.map(([l,v]) => renderBar(l,v)).join('');
+
+  // LIDERAZGO
+  const lids = [
+    ["Mide unidades/consultora", pS(iMide)],
+    ["Reconoce/celebra públicamente", pS(iReconoce)],
+    ["Energía positiva al equipo", pS(iEnergia)],
+    ["Detecta bloqueos emocionales", pS(iBloqueos)],
+    ["Entrena/acompaña equipo", pS(iEntrena)],
+    ["Grupo en Aceler. Digital", pS(iAceler)],
+    ["Identifica talento líder", pS(iTalento)],
+    ["Meta viajes del equipo", pS(iMetaEquipo)],
+    ["Corrige con CIMAS", pS(iCorrige)],
+    ["Construye nueva estrategia", pS(iConstruye)],
+    ["Acompaña 5-3-2 al equipo", pS(iAcompana)],
+    ["Seguim. CIMAS al equipo", pS(iSeguimCIMAS)],
+    ["Nuevas guías con equipo", pS(iNuevasGuias)],
+    ["Cursos 2-3/sem en equipo", pS(iCursos)],
+    ["Comparte casos reales", pS(iCasos)],
+  ].sort((a,b) => b[1]-a[1]);
+  document.getElementById('bars-liderazgo').innerHTML = lids.map(([l,v]) => renderBar(l,v)).join('');
+
+  // POR DIRECTOR
+  const dirMap = {};
+  rows.forEach(r => {
+    const d = (r[iDirector]||"").toString().trim().replace(/\s*\(.*\)/, '');
+    if (!d) return;
+    if (!dirMap[d]) dirMap[d] = [];
+    dirMap[d].push(r);
+  });
+  document.getElementById('dir-tbody').innerHTML = Object.entries(dirMap)
+    .sort((a,b) => b[1].length - a[1].length)
+    .map(([d, rs]) => {
+      const nd = rs.length;
+      const desc = pct(rs, iDescargo, "Sí");
+      const rev  = pct(rs, iRevisaJueves, "Sí");
+      return `<tr>
+        <td style="font-weight:500">${d}</td>
+        <td style="color:var(--text-muted)">${nd}</td>
+        <td>
+          <div class="mini-bar-wrap">
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${desc}%;background:${barColor(desc)}"></div></div>
+            <span class="mini-bar-pct" style="color:${barColor(desc)}">${desc}%</span>
+          </div>
+        </td>
+        <td>
+          <div class="mini-bar-wrap">
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${rev}%;background:${barColor(rev)}"></div></div>
+            <span class="mini-bar-pct" style="color:${barColor(rev)}">${rev}%</span>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+
+  // CONCLUSIONES (dinámicas basadas en datos)
+  const conclusiones = [
+    {
+      tipo: "critico",
+      titulo: "CIMAS se conoce pero prácticamente no se ejecuta",
+      texto: `${descargo}% descargó la guía, pero solo el ${revisaJ}% revisa su semana los jueves — la brecha más profunda de la región. El ${planifica5}% planifica en 5 etapas, indicando comprensión conceptual, pero el hábito semanal no se instaló. El cuello de botella no es acceso ni comprensión: es rutina.`
+    },
+    {
+      tipo: "critico",
+      titulo: "La duplicación al equipo es prácticamente nula",
+      texto: `Solo el ${pS(iCasos)}% comparte casos reales, el ${pS(iCursos)}% impulsa cursos en el equipo y el ${pS(iNuevasGuias)}% usa las nuevas guías con su gente. La transferencia líder→consultor es el eslabón más débil.`
+    },
+    {
+      tipo: "critico",
+      titulo: "Captador de contactos bajo — hay presencia sin conversión",
+      texto: `Solo el ${pS(iCaptador)}% usa el captador de contactos. El ${pS(iMateriales)}% tiene materiales y el ${pS(iMarca)}% publica marca personal, pero falta el eslabón de conversión. Hay presencia digital sin prospección medible.`
+    },
+    {
+      tipo: "atencion",
+      titulo: "Enfoque personal frágil",
+      texto: `El ${100-siempre}% reconoce estar disperso ("a veces concentrado"). Dado que el líder modela hábitos, la dispersión se replica hacia abajo.`
+    },
+    {
+      tipo: "atencion",
+      titulo: "Meta de viajes no internalizada",
+      texto: `Solo el ${pS(iMeta)}% tiene clara su meta de viajes — una de las palancas motivacionales clave. Sin ancla motivacional clara, la constancia cae.`
+    },
+    {
+      tipo: "atencion",
+      titulo: "Diferencias marcadas entre directores en ejecución CIMAS",
+      texto: `La descarga es alta en todos los equipos, pero la brecha entre descarga y ejecución semanal varía según el Director. La diferencia está en el acompañamiento, no en el acceso al material.`
+    },
+    {
+      tipo: "fortaleza",
+      titulo: "Orientación a prospección sólida",
+      texto: `${prospeccion}% declara que su ingreso depende de prospección vs. ${promociones}% de promociones. Argentina tiene la base conceptual correcta para la nueva estrategia.`
+    },
+    {
+      tipo: "fortaleza",
+      titulo: "Actividad individual de campo sólida",
+      texto: `${pS(iMateriales)}% tiene materiales, ${pS(iHable)}% habló de Just hoy, ${pS(i3exp)}% hace 3+ experiencias por semana. La base de acción está; falta sistematizarla con CIMAS.`
+    },
+  ];
+
+  const tagLabel = { critico: "Crítico", atencion: "Atención", fortaleza: "Fortaleza" };
+  document.getElementById('conclusiones').innerHTML = conclusiones.map(c => `
+    <div class="conclusion-item ${c.tipo}">
+      <span class="conclusion-badge">${tagLabel[c.tipo]}</span>
+      <div class="conclusion-body">
+        <div class="conclusion-title">${c.titulo}</div>
+        <div class="conclusion-text">${c.texto}</div>
+      </div>
+    </div>`).join('');
+
+  // RECOMENDACIONES
+  const recs = [
+    {
+      titulo: "Ritual del jueves CIMAS — urgente",
+      texto: `La brecha ${descargo}%→${revisaJ}% es la #1 de Argentina. Convertir la revisión/planificación semanal en evento fijo verificado por el Director. Sin este hábito el resto del sistema no funciona.`
+    },
+    {
+      titulo: "Acompañamiento diferenciado por Director",
+      texto: "Identificar qué Director tiene mejor ejecución y documentar sus prácticas para replicarlas. La descarga alta indica que el material llegó; falta el seguimiento del Director."
+    },
+    {
+      titulo: "Campaña de duplicación de equipo",
+      texto: `Metas concretas: llevar casos reales (hoy ${pS(iCasos)}%) y guías compartidas (${pS(iNuevasGuias)}%) a estándares mínimos. Usar la data de unidades por consultora para conversaciones de coaching.`
+    },
+    {
+      titulo: "Kit de conversión digital",
+      texto: `El captador de contactos (${pS(iCaptador)}%) es la práctica más rezagada y de mayor retorno. Convertirlo en hábito diario cierra el gap presencia→prospección medible.`
+    },
+    {
+      titulo: "Ancla motivacional: metas de viaje",
+      texto: `Solo el ${pS(iMeta)}% tiene clara su meta. Activar este motor en cada revisión de Director: el ${pS(iFoco)}% mantiene foco en CIMAS/guías 90 días, lo que indica disposición de base.`
+    },
+    {
+      titulo: "Aprovechar la base de campo existente",
+      texto: `Argentina tiene una de las bases individuales más sólidas (${pS(iMateriales)}% materiales, ${pS(i3exp)}% experiencias). El foco no es motivar la acción — es sistematizarla con CIMAS y replicarla hacia abajo.`
+    },
+  ];
+
+  document.getElementById('recomendaciones').innerHTML = recs.map((r, i) => `
+    <div class="rec-item">
+      <span class="rec-num">${i+1}</span>
+      <div>
+        <div class="rec-title">${r.titulo}</div>
+        <div class="rec-text">${r.texto}</div>
+      </div>
+    </div>`).join('');
+
+  animateBars();
+}
+
+loadData();
+</script>
+</body>
+</html>
