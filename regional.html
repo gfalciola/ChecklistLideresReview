@@ -395,15 +395,32 @@ body {
   transition: color 0.15s;
 }
 .back-link:hover { color: var(--text); }
+
+/* REVISION CONTROLS */
+.rev-controls { background:var(--bg2); border-bottom:1px solid var(--border); padding:0.75rem 1.5rem; display:flex; align-items:center; flex-wrap:wrap; gap:12px; }
+.rev-mode-tabs { display:flex; border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+.rev-mode-tab { padding:5px 14px; font-size:12px; font-weight:500; cursor:pointer; background:var(--bg2); color:var(--text-muted); border:none; transition:all .15s; }
+.rev-mode-tab.active { background:var(--red); color:white; }
+.rev-sep { width:1px; background:var(--border); margin:0 4px; }
+.rev-filter-btns { display:flex; gap:5px; flex-wrap:wrap; }
+.rev-btn { padding:4px 12px; font-size:12px; font-weight:500; border:1px solid var(--border); border-radius:20px; cursor:pointer; background:var(--bg2); color:var(--text-muted); transition:all .15s; white-space:nowrap; }
+.rev-btn.active { border-color:var(--red); background:var(--red-light); color:var(--red-dark); }
+.rev-compare-wrap { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-muted); }
+.rev-select { padding:4px 10px; font-size:12px; border:1px solid var(--border); border-radius:6px; background:var(--bg2); cursor:pointer; color:var(--text); }
+.rev-compare-btn { padding:5px 14px; font-size:12px; font-weight:600; border:none; border-radius:6px; background:var(--red); color:white; cursor:pointer; transition:opacity .15s; }
+.rev-compare-btn:hover { opacity:.85; }
+.rev-n-badge { font-size:11px; color:var(--text-muted); }
+.rev-warning { font-size:11px; color:var(--orange); font-weight:500; }
+.cmp-label-a { display:inline-block; width:10px; height:10px; border-radius:2px; background:#1D9E75; margin-right:3px; vertical-align:middle; }
+.cmp-label-b { display:inline-block; width:10px; height:10px; border-radius:2px; background:#BA7517; margin-right:3px; vertical-align:middle; }
+</style>
 </style>
 </head>
 <body>
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-nav">
-    <a href="index.html">← Países</a>
-  </div>
+  <div class="hero-nav"><a href="index.html">← Países</a></div>
   <div class="hero-eyebrow">Just América · Plan 90 días · Junio 2026</div>
   <h1 class="hero-title">Vista Regional</h1>
   <p class="hero-sub">Implementación CIMAS · Nueva estrategia SwissJust · 8 países</p>
@@ -418,111 +435,74 @@ body {
 
 <!-- KPI STRIP -->
 <div class="kpi-strip" id="kpi-strip" style="display:none">
-  <div class="kpi-cell accent">
-    <div class="kpi-val" id="kpi-total">—</div>
-    <div class="kpi-label">Respuestas región</div>
+  <div class="kpi-cell accent"><div class="kpi-val" id="kpi-total">—</div><div class="kpi-label">Respuestas región</div></div>
+  <div class="kpi-cell"><div class="kpi-val" id="kpi-paises">—</div><div class="kpi-label">Países</div></div>
+  <div class="kpi-cell green"><div class="kpi-val" id="kpi-descargo">—</div><div class="kpi-label">Descargó CIMAS (prom.)</div></div>
+  <div class="kpi-cell orange"><div class="kpi-val" id="kpi-revisa">—</div><div class="kpi-label">Revisa jueves (prom.)</div></div>
+  <div class="kpi-cell"><div class="kpi-val" id="kpi-enfoque">—</div><div class="kpi-label">Enfoque pleno (prom.)</div></div>
+  <div class="kpi-cell green"><div class="kpi-val" id="kpi-prospeccion">—</div><div class="kpi-label">Depende prospección (prom.)</div></div>
+</div>
+
+<!-- REVISION CONTROLS -->
+<div class="rev-controls" id="rev-controls" style="display:none">
+  <div class="rev-mode-tabs">
+    <button class="rev-mode-tab active" onclick="setMode('filter')">Filtrar</button>
+    <button class="rev-mode-tab" onclick="setMode('compare')">Comparar</button>
   </div>
-  <div class="kpi-cell">
-    <div class="kpi-val" id="kpi-paises">8</div>
-    <div class="kpi-label">Países</div>
+  <div class="rev-sep"></div>
+  <div id="filter-mode" class="rev-filter-btns"></div>
+  <div id="compare-mode" style="display:none" class="rev-compare-wrap">
+    <select class="rev-select" id="cmp-a"></select>
+    <span>vs</span>
+    <select class="rev-select" id="cmp-b"></select>
+    <button class="rev-compare-btn" onclick="runCompare()">Comparar</button>
   </div>
-  <div class="kpi-cell green">
-    <div class="kpi-val" id="kpi-descargo">—</div>
-    <div class="kpi-label">Descargó CIMAS (promedio)</div>
-  </div>
-  <div class="kpi-cell orange">
-    <div class="kpi-val" id="kpi-revisa">—</div>
-    <div class="kpi-label">Revisa jueves (promedio)</div>
-  </div>
-  <div class="kpi-cell">
-    <div class="kpi-val" id="kpi-enfoque">—</div>
-    <div class="kpi-label">Enfoque pleno (promedio)</div>
-  </div>
-  <div class="kpi-cell green">
-    <div class="kpi-val" id="kpi-prospeccion">—</div>
-    <div class="kpi-label">Depende prospección (promedio)</div>
-  </div>
+  <span class="rev-n-badge" id="rev-n-badge"></span>
+  <span class="rev-warning" id="rev-warning"></span>
 </div>
 
 <!-- MAIN -->
 <div class="container" id="main-content" style="display:none">
-
-  <!-- EMBUDO CIMAS -->
   <div class="section">
-    <div class="section-header">
-      <span class="section-title">Embudo CIMAS por país</span>
-    </div>
+    <div class="section-header"><span class="section-title">Embudo CIMAS por país</span></div>
     <div class="embudo-grid">
-      <table class="embudo-table" id="embudo-table">
-        <thead>
-          <tr>
-            <th>Etapa</th>
-            <th class="country-col" id="th-arg">ARG</th>
-            <th class="country-col" id="th-chl">CHL</th>
-            <th class="country-col" id="th-col">COL</th>
-            <th class="country-col" id="th-cri">CRI</th>
-            <th class="country-col" id="th-mex">MEX</th>
-            <th class="country-col" id="th-pan">PAN</th>
-            <th class="country-col" id="th-per">PER</th>
-            <th class="country-col" id="th-ury">URY</th>
-            <th class="country-col" style="border-left:1px solid var(--border)">PROM.</th>
-          </tr>
-        </thead>
+      <table class="embudo-table">
+        <thead><tr>
+          <th>Etapa</th>
+          <th class="country-col">ARG</th><th class="country-col">CHL</th><th class="country-col">COL</th>
+          <th class="country-col">CRI</th><th class="country-col">MEX</th><th class="country-col">PAN</th>
+          <th class="country-col">PER</th><th class="country-col">URY</th>
+          <th class="country-col" style="border-left:1px solid var(--border)" id="embudo-prom-header">PROM.</th>
+        </tr></thead>
         <tbody id="embudo-tbody"></tbody>
       </table>
     </div>
   </div>
-
-  <!-- RANKING POR IMPLEMENTACIÓN CIMAS -->
   <div class="section">
-    <div class="section-header">
-      <span class="section-title">Ranking de implementación CIMAS (revisa jueves)</span>
-    </div>
+    <div class="section-header"><span class="section-title" id="ranking-title">Ranking de implementación CIMAS (revisa jueves)</span></div>
     <div class="ranking-card">
       <table class="ranking-table">
-        <thead>
-          <tr>
-            <th style="width:40px">#</th>
-            <th>País</th>
-            <th>Respuestas</th>
-            <th style="min-width:200px">% Revisa jueves</th>
-          </tr>
-        </thead>
+        <thead><tr><th style="width:40px">#</th><th>País</th><th>Respuestas</th><th style="min-width:200px">% Revisa jueves</th></tr></thead>
         <tbody id="ranking-tbody"></tbody>
       </table>
     </div>
   </div>
-
-  <!-- HEATMAP PRÁCTICAS INDIVIDUALES -->
   <div class="section">
     <div class="heatmap-wrap">
-      <div class="heatmap-title">Prácticas individuales del líder — comparativa regional</div>
-      <table class="heatmap-table" id="heatmap-individual">
-        <thead id="heatmap-ind-head"></thead>
-        <tbody id="heatmap-ind-body"></tbody>
-      </table>
+      <div class="heatmap-title" id="heatmap-ind-title">Prácticas individuales del líder — comparativa regional</div>
+      <table class="heatmap-table"><thead id="heatmap-ind-head"></thead><tbody id="heatmap-ind-body"></tbody></table>
     </div>
   </div>
-
-  <!-- HEATMAP LIDERAZGO -->
   <div class="section">
     <div class="heatmap-wrap">
-      <div class="heatmap-title">Liderazgo de equipo y duplicación — comparativa regional</div>
-      <table class="heatmap-table" id="heatmap-liderazgo">
-        <thead id="heatmap-lid-head"></thead>
-        <tbody id="heatmap-lid-body"></tbody>
-      </table>
+      <div class="heatmap-title" id="heatmap-lid-title">Liderazgo de equipo y duplicación — comparativa regional</div>
+      <table class="heatmap-table"><thead id="heatmap-lid-head"></thead><tbody id="heatmap-lid-body"></tbody></table>
     </div>
   </div>
-
-  <!-- ACTION ITEMS -->
   <div class="section">
-    <div class="section-header">
-      <span class="section-title">Action items regionales — brechas más críticas</span>
-    </div>
+    <div class="section-header"><span class="section-title">Action items regionales — brechas más críticas</span></div>
     <div class="action-grid" id="action-grid"></div>
   </div>
-
 </div>
 
 <div class="footer">
@@ -532,305 +512,348 @@ body {
 
 <script>
 const ENDPOINT = "https://script.google.com/macros/s/AKfycbxZe_44XNkXtwSbA4hfVe_fRF3ZqZxgJB-5fftq2djQrFaGArtK_GL0_mEVKLsj76cv/exec";
-
 const PAISES = [
-  { key: "Argentina",  code: "ARG", flag: "🇦🇷" },
-  { key: "Chile",      code: "CHL", flag: "🇨🇱" },
-  { key: "Colombia",   code: "COL", flag: "🇨🇴" },
-  { key: "Costa Rica", code: "CRI", flag: "🇨🇷" },
-  { key: "Mexico",     code: "MEX", flag: "🇲🇽" },
-  { key: "Panamá",     code: "PAN", flag: "🇵🇦" },
-  { key: "Perú",       code: "PER", flag: "🇵🇪" },
-  { key: "Uruguay",    code: "URY", flag: "🇺🇾" },
+  { key:"Argentina",  code:"ARG", flag:"🇦🇷" },
+  { key:"Chile",      code:"CHL", flag:"🇨🇱" },
+  { key:"Colombia",   code:"COL", flag:"🇨🇴" },
+  { key:"Costa Rica", code:"CRI", flag:"🇨🇷" },
+  { key:"Mexico",     code:"MEX", flag:"🇲🇽" },
+  { key:"Panamá",     code:"PAN", flag:"🇵🇦" },
+  { key:"Perú",       code:"PER", flag:"🇵🇪" },
+  { key:"Uruguay",    code:"URY", flag:"🇺🇾" },
 ];
 
+let rawData = [];   // full data per country, never filtered
+let revisions = []; // all revision values found
+let currentMode = 'filter';
+
+const RED="#C0392B", GREEN="#1D9E75", ORANGE="#BA7517";
+
 // ── HELPERS ──────────────────────────────────────────────────────────────────
-function pctSi(rows, colIdx) {
-  if (!rows || !rows.length || colIdx < 0) return null;
-  const c = rows.filter(r => (r[colIdx]||"").toString().trim().toLowerCase() === "sí").length;
-  return Math.round(c / rows.length * 100);
-}
-function pctContains(rows, colIdx, frag) {
-  if (!rows || !rows.length || colIdx < 0) return null;
-  const c = rows.filter(r => (r[colIdx]||"").toString().toLowerCase().includes(frag.toLowerCase())).length;
-  return Math.round(c / rows.length * 100);
-}
-function idx(headers, frag) {
-  return headers.findIndex(h => h.toLowerCase().includes(frag.toLowerCase()));
-}
+const pctSi = (rows,i) => { if(!rows||!rows.length||i<0) return null; return Math.round(rows.filter(r=>(r[i]||"").toString().trim().toLowerCase()==="sí").length/rows.length*100); };
+const pctC  = (rows,i,f) => { if(!rows||!rows.length||i<0) return null; return Math.round(rows.filter(r=>(r[i]||"").toString().toLowerCase().includes(f.toLowerCase())).length/rows.length*100); };
+const idxH  = (h,f) => h.findIndex(x=>x.toLowerCase().includes(f.toLowerCase()));
 function heatColor(v) {
-  if (v === null) return '#F5F4F0';
-  if (v >= 65) return `rgba(29,158,117,${0.12 + v/100*0.35})`;
-  if (v >= 35) return `rgba(186,117,23,${0.10 + v/100*0.28})`;
-  return `rgba(192,57,43,${0.10 + (35-v)/35*0.35})`;
+  if(v===null) return '#F5F4F0';
+  if(v>=65) return `rgba(29,158,117,${0.12+v/100*0.35})`;
+  if(v>=35) return `rgba(186,117,23,${0.10+v/100*0.28})`;
+  return `rgba(192,57,43,${0.10+(35-v)/35*0.35})`;
 }
 function textColor(v) {
-  if (v === null) return '#AAAAAA';
-  if (v >= 65) return '#0A5A3A';
-  if (v >= 35) return '#7A4A0A';
+  if(v===null) return '#AAAAAA';
+  if(v>=65) return '#0A5A3A';
+  if(v>=35) return '#7A4A0A';
   return '#7A1A0A';
 }
-function pill(v, size) {
-  if (v === null) return '<span style="color:#555;font-size:11px">—</span>';
-  const bg = heatColor(v);
-  const col = textColor(v);
-  return `<span class="pct-pill" style="background:${bg};color:${col};font-size:${size||11.5}px">${v}%</span>`;
+function pill(v,size) {
+  if(v===null) return '<span style="color:#555;font-size:11px">—</span>';
+  return `<span class="pct-pill" style="background:${heatColor(v)};color:${textColor(v)};font-size:${size||11.5}px">${v}%</span>`;
 }
-function avgPonderado(paisData, fn) {
-  let total = 0, weight = 0;
-  paisData.forEach(pd => {
-    if (!pd || !pd.rows) return;
-    const v = fn(pd);
-    if (v !== null) { total += v * pd.rows.length; weight += pd.rows.length; }
-  });
-  return weight ? Math.round(total / weight) : null;
+function deltaCell(va, vb) {
+  if(va===null||vb===null) return '';
+  const d=vb-va;
+  if(d===0) return `<span style="color:#999;font-size:10px"> →0</span>`;
+  return d>0 ? `<span style="color:${GREEN};font-size:10px"> ↑${d}</span>` : `<span style="color:${RED};font-size:10px"> ↓${Math.abs(d)}</span>`;
 }
 
-// ── FETCH ALL COUNTRIES ───────────────────────────────────────────────────────
-async function fetchPais(pais, chip) {
-  chip.classList.add('loading');
-  try {
-    const res = await fetch(`${ENDPOINT}?action=pais&pais=${encodeURIComponent(pais.key)}`);
-    const json = await res.json();
-    const headers = json.headers.map(h => h.toString().trim());
-    chip.classList.remove('loading');
-    chip.classList.add('done');
-    chip.textContent = `${pais.code} ✓`;
-    return { ...pais, headers, rows: json.rows };
-  } catch(e) {
-    chip.classList.remove('loading');
-    chip.classList.add('error');
-    chip.textContent = `${pais.code} ✗`;
-    return { ...pais, headers: [], rows: [] };
-  }
-}
-
-// ── EXTRACT METRICS FOR A COUNTRY ─────────────────────────────────────────────
-function extractMetrics(pd) {
-  const h = pd.headers;
-  const r = pd.rows;
-  const i = (frag) => idx(h, frag);
-  const s = (frag) => pctSi(r, i(frag));
-  const c = (frag, sub) => pctContains(r, i(frag), sub);
-
+// ── EXTRACT METRICS from rows ─────────────────────────────────────────────────
+function extractMetrics(rows, h) {
+  const i = f => idxH(h,f);
+  const s = f => pctSi(rows, i(f));
+  const c = (f,sub) => pctC(rows, i(f), sub);
   return {
-    n: r.length,
-    // EMBUDO
-    descargo:      s("Descargaste y estudiaste la Guía CIMAS"),
-    planifica5:    s("planificando actividades en cada una de las 5 etapas"),
-    planificaJ:    s("Planificas tu semana siguiente cada jueves"),
-    revisaJ:       s("Revisas y analizas tu semana anterior cada jueves"),
-    seguimCIMAS:   s("seguimiento a cada consultor de tu grupo utilizando la metodología CIMAS"),
-    // ENFOQUE / ESTRATEGIA
-    enfoquePleno:  c("nivel de enfoque", "siempre"),
-    prospeccion:   c("ingreso depende principalmente", "prospecc"),
-    promociones:   c("ingreso depende principalmente", "promoci"),
-    // PRÁCTICAS INDIVIDUALES
-    materiales:    s("materiales necesarios"),
-    exp3:          s("realizando al menos 3 Experiencias"),
-    expExpress:    s("realizaste la nueva Experiencia Express"),
-    hable:         s("Hoy hablé de Just"),
-    metaViajes:    s("meta relacionada con los viajes de incentivo"),
-    bio:           s("biografía (bio)"),
-    enlacePub:     s("publicaciones incluyen tu enlace personal"),
-    marca:         s("Publicas contenido en redes sociales que construye tu marca"),
-    demo:          s("demostración sensorial"),
-    cta:           s("llamada a la acción"),
-    guiaExp:       s("Explorando la Oportunidad"),
-    comparte:      s("historia personal de transformación"),
-    expNuevas:     s("Experiencias Just que nunca habías hecho"),
-    registra:      s("Registras evidencia"),
-    captador:      s("captador de contactos"),
-    avanza:        s("formación Just, completando cursos"),
-    // LIDERAZGO
-    talento:       s("identificando dentro de tu equipo personas con potencial"),
-    bloqueos:      s("bloqueos emocionales"),
-    construye:     s("nueva propuesta de valor"),
-    metaEquipo:    s("todo en tu equipo tienen clara su meta"),
-    reconoce:      s("Reconoces y celebras públicamente"),
-    acompana:      s("Acompañas a los consultores"),
-    nuevasGuias:   s("equipo está utilizando también las nuevas Guías"),
-    casos:         s("Compartes casos reales"),
-    corrige:       s("metodología CIMAS para corregir"),
-    cursos:        s("consultores realizan entre 2 y 3 cursos"),
-    aceler:        s("Programa de Aceleración Digital"),
-    mide:          s("midiendo el crecimiento de unidades"),
-    foco:          s("manteniendo el foco"),
-    entrena:       s("entrenando y acompañando"),
-    energia:       s("transmitiendo energía positiva"),
+    n: rows.length,
+    iRevision: i("Número de revisión"),
+    descargo:    s("Descargaste y estudiaste la Guía CIMAS"),
+    planifica5:  s("planificando actividades en cada una de las 5 etapas"),
+    planificaJ:  s("Planificas tu semana siguiente cada jueves"),
+    revisaJ:     s("Revisas y analizas tu semana anterior cada jueves"),
+    seguimCIMAS: s("seguimiento a cada consultor de tu grupo utilizando la metodología CIMAS"),
+    enfoquePleno:c("nivel de enfoque","siempre") ?? c("estás concentrado","siempre") ?? c("enfoque","siempre"),
+    prospeccion: c("ingreso depende principalmente","prospecc"),
+    promociones: c("ingreso depende principalmente","promoci"),
+    materiales:  s("materiales necesarios"),
+    exp3:        s("realizando al menos 3 Experiencias"),
+    expExpress:  s("realizaste la nueva Experiencia Express"),
+    hable:       s("Hoy hablé de Just"),
+    metaViajes:  s("meta relacionada con los viajes de incentivo"),
+    bio:         s("biografía (bio)"),
+    enlacePub:   s("publicaciones incluyen tu enlace personal"),
+    marca:       s("Publicas contenido en redes sociales que construye tu marca"),
+    demo:        s("demostración sensorial"),
+    cta:         s("llamada a la acción"),
+    guiaExp:     s("Explorando la Oportunidad"),
+    comparte:    s("historia personal de transformación"),
+    expNuevas:   s("Experiencias Just que nunca habías hecho"),
+    registra:    s("Registras evidencia"),
+    captador:    s("captador de contactos"),
+    avanza:      s("formación Just, completando cursos"),
+    talento:     s("identificando dentro de tu equipo personas con potencial"),
+    bloqueos:    s("bloqueos emocionales"),
+    construye:   s("nueva propuesta de valor"),
+    metaEquipo:  s("todo en tu equipo tienen clara su meta"),
+    reconoce:    s("Reconoces y celebras públicamente"),
+    acompana:    s("Acompañas a los consultores"),
+    nuevasGuias: s("equipo está utilizando también las nuevas Guías"),
+    casos:       s("Compartes casos reales"),
+    corrige:     s("metodología CIMAS para corregir"),
+    cursos:      s("consultores realizan entre 2 y 3 cursos"),
+    aceler:      s("Programa de Aceleración Digital"),
+    mide:        s("midiendo el crecimiento de unidades"),
+    foco:        s("manteniendo el foco"),
+    entrena:     s("entrenando y acompañando"),
+    energia:     s("transmitiendo energía positiva"),
   };
 }
 
+// ── FILTER rows by revision ───────────────────────────────────────────────────
+function filterRows(rows, iRev, rev) {
+  if (rev === 'all') return rows;
+  return rows.filter(r => (r[iRev]||"").toString().trim() === rev);
+}
+
+// ── MODE TOGGLE ───────────────────────────────────────────────────────────────
+function setMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.rev-mode-tab').forEach((t,i) => t.classList.toggle('active', (i===0&&mode==='filter')||(i===1&&mode==='compare')));
+  document.getElementById('filter-mode').style.display   = mode==='filter'  ? 'flex' : 'none';
+  document.getElementById('compare-mode').style.display  = mode==='compare' ? 'flex' : 'none';
+  if (mode==='filter') filterByRevision(document.querySelector('.rev-btn.active')?.dataset.rev || 'all');
+}
+
+// ── FILTER MODE ───────────────────────────────────────────────────────────────
+function filterByRevision(rev) {
+  document.querySelectorAll('.rev-btn').forEach(b => b.classList.toggle('active', b.dataset.rev===rev));
+  const filtered = rawData.map(pd => {
+    const iRev = idxH(pd.headers, "Número de revisión");
+    const rows = filterRows(pd.rows, iRev, rev);
+    return { ...pd, rows };
+  });
+  const totalN = filtered.reduce((s,d) => s+d.rows.length, 0);
+  document.getElementById('rev-n-badge').textContent = `n = ${totalN.toLocaleString()}`;
+  document.getElementById('rev-warning').textContent = '';
+  renderRegional(filtered, null, null);
+}
+
+// ── COMPARE MODE ──────────────────────────────────────────────────────────────
+function runCompare() {
+  const a = document.getElementById('cmp-a').value;
+  const b = document.getElementById('cmp-b').value;
+  if (a===b) { alert('Seleccioná dos revisiones diferentes'); return; }
+  const filteredA = rawData.map(pd => { const iRev=idxH(pd.headers,"Número de revisión"); return {...pd, rows:filterRows(pd.rows,iRev,a)}; });
+  const filteredB = rawData.map(pd => { const iRev=idxH(pd.headers,"Número de revisión"); return {...pd, rows:filterRows(pd.rows,iRev,b)}; });
+  const totalN = filteredA.reduce((s,d)=>s+d.rows.length,0) + filteredB.reduce((s,d)=>s+d.rows.length,0);
+  document.getElementById('rev-n-badge').textContent = `n = ${totalN.toLocaleString()}`;
+  document.getElementById('rev-warning').textContent = '';
+  renderRegional(filteredA, filteredB, {a, b});
+}
+
 // ── RENDER ────────────────────────────────────────────────────────────────────
-function renderAll(allData) {
-  const metrics = allData.map(extractMetrics);
-  const totalN = metrics.reduce((s, m) => s + m.n, 0);
+function renderRegional(dataA, dataB, cmpInfo) {
+  const metricsA = dataA.map(pd => extractMetrics(pd.rows, pd.headers));
+  const metricsB = dataB ? dataB.map(pd => extractMetrics(pd.rows, pd.headers)) : null;
 
-  // KPIs
-  document.getElementById('kpi-total').textContent = totalN.toLocaleString();
-  document.getElementById('kpi-descargo').textContent = avgPonderado(metrics.map((m,i)=>({rows:{length:m.n},v:m.descargo})), x => x.v !== undefined ? x.v : null) + '%';
-
-  const wavg = (key) => {
+  const wavg = (metrics, key) => {
     let t=0,w=0;
     metrics.forEach(m => { if(m[key]!==null){t+=m[key]*m.n;w+=m.n;} });
     return w?Math.round(t/w):null;
   };
 
-  document.getElementById('kpi-descargo').textContent    = (wavg('descargo')    ?? '—') + (wavg('descargo') !== null ? '%':'');
-  document.getElementById('kpi-revisa').textContent      = (wavg('revisaJ')     ?? '—') + (wavg('revisaJ') !== null ? '%':'');
-  document.getElementById('kpi-enfoque').textContent     = (wavg('enfoquePleno')?? '—') + (wavg('enfoquePleno') !== null ? '%':'');
-  document.getElementById('kpi-prospeccion').textContent = (wavg('prospeccion') ?? '—') + (wavg('prospeccion') !== null ? '%':'');
-
-  document.getElementById('kpi-strip').style.display = 'grid';
-  document.getElementById('main-content').style.display = 'block';
-  document.getElementById('hero-loading').style.display = 'none';
+  // KPIs
+  const totalN = metricsA.reduce((s,m)=>s+m.n,0);
+  document.getElementById('kpi-total').textContent    = totalN.toLocaleString();
+  document.getElementById('kpi-paises').textContent   = dataA.filter(d=>d.rows.length>0).length;
+  document.getElementById('kpi-descargo').textContent = (wavg(metricsA,'descargo')??'—') + (wavg(metricsA,'descargo')!==null?'%':'');
+  document.getElementById('kpi-revisa').textContent   = (wavg(metricsA,'revisaJ')??'—')  + (wavg(metricsA,'revisaJ')!==null?'%':'');
+  document.getElementById('kpi-enfoque').textContent  = (wavg(metricsA,'enfoquePleno')??'—') + (wavg(metricsA,'enfoquePleno')!==null?'%':'');
+  document.getElementById('kpi-prospeccion').textContent = (wavg(metricsA,'prospeccion')??'—') + (wavg(metricsA,'prospeccion')!==null?'%':'');
 
   // ── EMBUDO TABLE
   const embudoSteps = [
-    { label: "Descargó la guía CIMAS",        key: "descargo"    },
-    { label: "Planifica en 5 etapas",          key: "planifica5"  },
-    { label: "Planifica los jueves",           key: "planificaJ"  },
-    { label: "Revisa los jueves",              key: "revisaJ"     },
-    { label: "Seguimiento CIMAS al equipo",    key: "seguimCIMAS" },
+    { label:"Descargó la guía CIMAS",     key:"descargo"    },
+    { label:"Planifica en 5 etapas",      key:"planifica5"  },
+    { label:"Planifica los jueves",       key:"planificaJ"  },
+    { label:"Revisa los jueves",          key:"revisaJ"     },
+    { label:"Seguimiento CIMAS al equipo",key:"seguimCIMAS" },
   ];
-  document.getElementById('embudo-tbody').innerHTML = embudoSteps.map(step => {
-    const vals = metrics.map(m => m[step.key]);
-    const avg = wavg(step.key);
-    const cells = vals.map(v => `<td style="text-align:center">${pill(v, 11)}</td>`).join('');
-    return `<tr>
-      <td class="metric-label">${step.label}</td>
-      ${cells}
-      <td class="avg-cell" style="border-left:1px solid var(--border)">${pill(avg, 11)}</td>
-    </tr>`;
-  }).join('');
 
-  // ── RANKING
-  const ranked = allData.map((pd, i) => ({
-    flag: pd.flag, key: pd.key, code: pd.code,
-    n: metrics[i].n,
-    revisa: metrics[i].revisaJ
-  })).sort((a,b) => (b.revisa??-1) - (a.revisa??-1));
-
-  document.getElementById('ranking-tbody').innerHTML = ranked.map((p, i) => {
-    const col = p.revisa >= 40 ? '#1DB37A' : p.revisa >= 20 ? '#E8900A' : '#C0392B';
-    return `<tr>
-      <td><span class="rank-num">${i+1}</span></td>
-      <td><strong>${p.flag} ${p.key}</strong></td>
-      <td style="color:#8A8A9A">${p.n}</td>
-      <td>
-        <div class="rank-bar-wrap">
-          <div class="rank-bar-track">
-            <div class="rank-bar-fill" style="width:${p.revisa??0}%;background:${col}"></div>
-          </div>
-          <span class="rank-pct" style="color:${col}">${p.revisa??'—'}${p.revisa!==null?'%':''}</span>
-        </div>
-      </td>
-    </tr>`;
-  }).join('');
-
-  // ── HEATMAP builder
-  function buildHeatmap(headId, bodyId, metricDefs) {
-    const colLabels = allData.map(p => `${p.flag}<br>${p.code}`);
-    document.getElementById(headId).innerHTML = `<tr>
-      <th class="row-label">Práctica</th>
-      ${colLabels.map(l => `<th>${l}</th>`).join('')}
-      <th class="avg-col">PROM.</th>
-    </tr>`;
-
-    document.getElementById(bodyId).innerHTML = metricDefs.map(([label, key]) => {
-      const vals = metrics.map(m => m[key]);
-      const avg = wavg(key);
-      const cells = vals.map(v => {
-        const bg = heatColor(v);
-        const col = textColor(v);
-        return `<td style="background:${bg};color:${col}" title="${v??'—'}%">${v??'—'}${v!==null?'%':''}`;
-      }).join('');
-      return `<tr>
-        <td class="row-label">${label}</td>
-        ${cells}
-        <td class="avg-col" style="background:${heatColor(avg)};color:${textColor(avg)}">${avg??'—'}${avg!==null?'%':''}</td>
-      </tr>`;
+  if (!cmpInfo) {
+    document.getElementById('embudo-prom-header').textContent = 'PROM.';
+    document.getElementById('embudo-tbody').innerHTML = embudoSteps.map(step => {
+      const vals = metricsA.map(m=>m[step.key]);
+      const avg = wavg(metricsA, step.key);
+      return `<tr><td class="metric-label">${step.label}</td>
+        ${vals.map(v=>`<td style="text-align:center">${pill(v,11)}</td>`).join('')}
+        <td class="avg-cell" style="border-left:1px solid var(--border)">${pill(avg,11)}</td></tr>`;
+    }).join('');
+  } else {
+    document.getElementById('embudo-prom-header').innerHTML = `<span class="cmp-label-a"></span>${cmpInfo.a} / <span class="cmp-label-b"></span>${cmpInfo.b}`;
+    document.getElementById('embudo-tbody').innerHTML = embudoSteps.map(step => {
+      const valsA = metricsA.map(m=>m[step.key]);
+      const valsB = metricsB.map(m=>m[step.key]);
+      const avgA = wavg(metricsA,step.key), avgB = wavg(metricsB,step.key);
+      return `<tr><td class="metric-label">${step.label}</td>
+        ${valsA.map((va,i)=>{const vb=valsB[i]; return `<td style="text-align:center;font-size:10px">
+          <span style="color:${textColor(va)}">${va??'—'}${va!==null?'%':''}</span>
+          <span style="color:#999">/</span>
+          <span style="color:${textColor(vb)}">${vb??'—'}${vb!==null?'%':''}</span>
+          ${deltaCell(va,vb)}</td>`;}).join('')}
+        <td class="avg-cell" style="border-left:1px solid var(--border);font-size:10px">
+          <span style="color:${textColor(avgA)}">${avgA??'—'}${avgA!==null?'%':''}</span> /
+          <span style="color:${textColor(avgB)}">${avgB??'—'}${avgB!==null?'%':''}</span>
+          ${deltaCell(avgA,avgB)}</td></tr>`;
     }).join('');
   }
 
-  buildHeatmap('heatmap-ind-head', 'heatmap-ind-body', [
-    ["Materiales listos",          "materiales"],
-    ["Hablé de Just hoy",          "hable"],
-    ["3+ Experiencias / sem",      "exp3"],
-    ["Experiencia Express",        "expExpress"],
-    ["Publica marca personal",     "marca"],
-    ["Exp. zona de confort",       "expNuevas"],
-    ["Registra evidencia",         "registra"],
-    ["Bio con enlace",             "bio"],
-    ["CTA en publicaciones",       "cta"],
-    ["Demo. sensorial",            "demo"],
-    ["Guía Explorando Op.",        "guiaExp"],
-    ["Comparte historia personal", "comparte"],
-    ["Avanza en formación",        "avanza"],
-    ["Enlace en publicaciones",    "enlacePub"],
-    ["Captador de contactos",      "captador"],
-  ]);
+  // ── RANKING
+  document.getElementById('ranking-title').textContent = cmpInfo
+    ? `Ranking CIMAS — ${cmpInfo.a} vs ${cmpInfo.b}`
+    : 'Ranking de implementación CIMAS (revisa jueves)';
 
-  buildHeatmap('heatmap-lid-head', 'heatmap-lid-body', [
-    ["Mide unidades / consultora",  "mide"],
-    ["Reconoce / celebra público",  "reconoce"],
-    ["Energía positiva al equipo",  "energia"],
-    ["Detecta bloqueos emocionales","bloqueos"],
-    ["Entrena / acompaña equipo",   "entrena"],
-    ["Grupo en Aceler. Digital",    "aceler"],
-    ["Identifica talento líder",    "talento"],
-    ["Meta viajes del equipo",      "metaEquipo"],
-    ["Corrige con CIMAS",           "corrige"],
-    ["Construye nueva estrategia",  "construye"],
-    ["Acompaña 5-3-2",             "acompana"],
-    ["Seguim. CIMAS al equipo",     "seguimCIMAS"],
-    ["Nuevas guías con equipo",     "nuevasGuias"],
-    ["Cursos 2-3/sem en equipo",    "cursos"],
-    ["Comparte casos reales",       "casos"],
-  ]);
+  const ranked = dataA.map((pd,i) => ({
+    flag:pd.flag, key:pd.key, code:pd.code,
+    n: metricsA[i].n,
+    revisaA: metricsA[i].revisaJ,
+    revisaB: metricsB ? metricsB[i].revisaJ : null,
+  })).sort((a,b)=>(b.revisaA??-1)-(a.revisaA??-1));
 
-  // ── ACTION ITEMS: top brechas regionales
-  const allMetricDefs = [
-    { label: "Revisa los jueves (CIMAS)",       key: "revisaJ",      desc: "Brecha central de implementación. La guía se descarga pero el hábito semanal no se instala." },
-    { label: "Seguimiento CIMAS al equipo",     key: "seguimCIMAS",  desc: "El líder no replica la metodología hacia abajo. La cadena de adopción se corta en el primer eslabón." },
-    { label: "Comparte casos reales",           key: "casos",        desc: "Sin evidencia real, la nueva propuesta de valor no se transmite al equipo ni a los prospectos." },
-    { label: "Captador de contactos",           key: "captador",     desc: "Alta presencia digital, baja conversión. La prospección medible no está ocurriendo." },
-    { label: "Nuevas guías con equipo",         key: "nuevasGuias",  desc: "Las guías llegaron al líder pero no bajan al consultor. La duplicación es el eslabón más débil." },
-    { label: "Cursos 2-3/sem en equipo",        key: "cursos",       desc: "La formación se concentra en el líder y no se distribuye en el equipo." },
-    { label: "Meta viajes del equipo",          key: "metaEquipo",   desc: "Sin ancla motivacional compartida, la constancia del equipo cae." },
-    { label: "Planifica los jueves (CIMAS)",    key: "planificaJ",   desc: "La planificación semanal con CIMAS no se está ejecutando consistentemente." },
-    { label: "Corrige con CIMAS",               key: "corrige",      desc: "La metodología no se usa como herramienta de corrección en el equipo." },
-    { label: "Construye nueva estrategia",      key: "construye",    desc: "La nueva propuesta de valor de SwissJust no está siendo incorporada en la actividad diaria." },
+  document.getElementById('ranking-tbody').innerHTML = ranked.map((p,i) => {
+    const col = p.revisaA>=40?GREEN:p.revisaA>=20?ORANGE:RED;
+    if (!cmpInfo) {
+      return `<tr>
+        <td><span class="rank-num">${i+1}</span></td>
+        <td><strong>${p.flag} ${p.key}</strong></td>
+        <td style="color:#6B6B6B">${p.n}</td>
+        <td><div class="rank-bar-wrap">
+          <div class="rank-bar-track"><div class="rank-bar-fill" style="width:${p.revisaA??0}%;background:${col}"></div></div>
+          <span class="rank-pct" style="color:${col}">${p.revisaA??'—'}${p.revisaA!==null?'%':''}</span>
+        </div></td></tr>`;
+    } else {
+      const colB = p.revisaB>=40?GREEN:p.revisaB>=20?ORANGE:RED;
+      return `<tr>
+        <td><span class="rank-num">${i+1}</span></td>
+        <td><strong>${p.flag} ${p.key}</strong></td>
+        <td style="color:#6B6B6B">${p.n}</td>
+        <td><div style="display:flex;flex-direction:column;gap:3px">
+          <div class="rank-bar-wrap">
+            <div class="rank-bar-track"><div class="rank-bar-fill" style="width:${p.revisaA??0}%;background:${GREEN};opacity:.85"></div></div>
+            <span style="font-size:11px;font-weight:600;color:${GREEN};width:38px;text-align:right">${p.revisaA??'—'}${p.revisaA!==null?'%':''}</span>
+          </div>
+          <div class="rank-bar-wrap">
+            <div class="rank-bar-track"><div class="rank-bar-fill" style="width:${p.revisaB??0}%;background:${ORANGE};opacity:.85"></div></div>
+            <span style="font-size:11px;font-weight:600;color:${ORANGE};width:38px;text-align:right">${p.revisaB??'—'}${p.revisaB!==null?'%':''}</span>
+            ${deltaCell(p.revisaA,p.revisaB)}
+          </div>
+        </div></td></tr>`;
+    }
+  }).join('');
+
+  // ── HEATMAPS
+  const indDefs = [
+    ["Materiales listos","materiales"],["Hablé de Just hoy","hable"],["3+ Experiencias/sem","exp3"],
+    ["Experiencia Express","expExpress"],["Publica marca personal","marca"],["Exp. zona de confort","expNuevas"],
+    ["Registra evidencia","registra"],["Bio con enlace","bio"],["CTA en publicaciones","cta"],
+    ["Demo. sensorial","demo"],["Guía Explorando Op.","guiaExp"],["Comparte historia","comparte"],
+    ["Avanza en formación","avanza"],["Enlace en publicaciones","enlacePub"],["Captador de contactos","captador"],
+  ];
+  const lidDefs = [
+    ["Mide unidades/consultora","mide"],["Reconoce/celebra público","reconoce"],["Energía positiva","energia"],
+    ["Detecta bloqueos emoc.","bloqueos"],["Entrena/acompaña equipo","entrena"],["Grupo Aceler. Digital","aceler"],
+    ["Identifica talento líder","talento"],["Meta viajes del equipo","metaEquipo"],["Corrige con CIMAS","corrige"],
+    ["Construye nueva estrategia","construye"],["Acompaña 5-3-2","acompana"],["Seguim. CIMAS equipo","seguimCIMAS"],
+    ["Nuevas guías con equipo","nuevasGuias"],["Cursos 2-3/sem equipo","cursos"],["Comparte casos reales","casos"],
   ];
 
-  const ranked_actions = allMetricDefs
+  function buildHeatmap(headId, bodyId, titleId, titleText, defs) {
+    document.getElementById(titleId).textContent = titleText + (cmpInfo ? ` — ${cmpInfo.a} vs ${cmpInfo.b}` : ' — comparativa regional');
+    const colLabels = dataA.map(p=>`${p.flag}<br>${p.code}`);
+    document.getElementById(headId).innerHTML = `<tr>
+      <th class="row-label">Práctica</th>
+      ${colLabels.map(l=>`<th>${l}</th>`).join('')}
+      <th class="avg-col">${cmpInfo?`<span class="cmp-label-a"></span>/<span class="cmp-label-b"></span>`:'PROM.'}</th>
+    </tr>`;
+
+    document.getElementById(bodyId).innerHTML = defs.map(([label, key]) => {
+      const valsA = metricsA.map(m=>m[key]);
+      const avgA = wavg(metricsA, key);
+      if (!cmpInfo) {
+        return `<tr><td class="row-label">${label}</td>
+          ${valsA.map(v=>`<td style="background:${heatColor(v)};color:${textColor(v)}" title="${v??'—'}%">${v??'—'}${v!==null?'%':''}</td>`).join('')}
+          <td class="avg-col" style="background:${heatColor(avgA)};color:${textColor(avgA)}">${avgA??'—'}${avgA!==null?'%':''}</td></tr>`;
+      } else {
+        const valsB = metricsB.map(m=>m[key]);
+        const avgB = wavg(metricsB, key);
+        return `<tr><td class="row-label">${label}</td>
+          ${valsA.map((va,i)=>{ const vb=valsB[i];
+            return `<td style="background:${heatColor(va)};color:${textColor(va)};font-size:10px" title="${va??'—'}% / ${vb??'—'}%">
+              ${va??'—'}${va!==null?'%':''}${deltaCell(va,vb)}</td>`;
+          }).join('')}
+          <td class="avg-col" style="background:${heatColor(avgA)};color:${textColor(avgA)};font-size:10px">
+            ${avgA??'—'}${avgA!==null?'%':''}${deltaCell(avgA,avgB)}</td></tr>`;
+      }
+    }).join('');
+  }
+
+  buildHeatmap('heatmap-ind-head','heatmap-ind-body','heatmap-ind-title','Prácticas individuales del líder', indDefs);
+  buildHeatmap('heatmap-lid-head','heatmap-lid-body','heatmap-lid-title','Liderazgo de equipo y duplicación', lidDefs);
+
+  // ── ACTION ITEMS
+  const actionDefs = [
+    { label:"Revisa los jueves (CIMAS)",    key:"revisaJ",    desc:"Brecha central de implementación. La guía se descarga pero el hábito semanal no se instala." },
+    { label:"Seguimiento CIMAS al equipo",  key:"seguimCIMAS",desc:"El líder no replica la metodología hacia abajo. La cadena de adopción se corta en el primer eslabón." },
+    { label:"Comparte casos reales",        key:"casos",      desc:"Sin evidencia real, la nueva propuesta de valor no se transmite al equipo ni a los prospectos." },
+    { label:"Captador de contactos",        key:"captador",   desc:"Alta presencia digital, baja conversión. La prospección medible no está ocurriendo." },
+    { label:"Nuevas guías con equipo",      key:"nuevasGuias",desc:"Las guías llegaron al líder pero no bajan al consultor. La duplicación es el eslabón más débil." },
+    { label:"Cursos 2-3/sem en equipo",     key:"cursos",     desc:"La formación se concentra en el líder y no se distribuye en el equipo." },
+    { label:"Meta viajes del equipo",       key:"metaEquipo", desc:"Sin ancla motivacional compartida, la constancia del equipo cae." },
+    { label:"Planifica los jueves (CIMAS)", key:"planificaJ", desc:"La planificación semanal con CIMAS no se está ejecutando consistentemente." },
+    { label:"Corrige con CIMAS",            key:"corrige",    desc:"La metodología no se usa como herramienta de corrección en el equipo." },
+    { label:"Construye nueva estrategia",   key:"construye",  desc:"La nueva propuesta de valor de SwissJust no está siendo incorporada en la actividad diaria." },
+  ];
+
+  const ranked_actions = actionDefs
     .map(def => ({
       ...def,
-      avg: wavg(def.key),
-      byPais: allData.map((pd, i) => ({ key: pd.key, code: pd.code, v: metrics[i][def.key] }))
+      avg: wavg(metricsA, def.key),
+      avgB: metricsB ? wavg(metricsB, def.key) : null,
+      byPais: dataA.map((pd,i) => ({ key:pd.key, code:pd.code, vA:metricsA[i][def.key], vB:metricsB?metricsB[i][def.key]:null }))
     }))
-    .filter(a => a.avg !== null)
-    .sort((a,b) => a.avg - b.avg)
-    .slice(0, 6);
+    .filter(a=>a.avg!==null)
+    .sort((a,b)=>a.avg-b.avg)
+    .slice(0,6);
 
-  document.getElementById('action-grid').innerHTML = ranked_actions.map((a, i) => {
-    const tipo = a.avg < 25 ? 'critico' : 'atencion';
-    const sorted = [...a.byPais].filter(p=>p.v!==null).sort((x,y)=>x.v-y.v);
+  document.getElementById('action-grid').innerHTML = ranked_actions.map((a,i) => {
+    const tipo = a.avg<25?'critico':'atencion';
+    const sorted = [...a.byPais].filter(p=>p.vA!==null).sort((x,y)=>x.vA-y.vA);
     const worst3 = new Set(sorted.slice(0,3).map(p=>p.key));
-    const chips = a.byPais
-      .filter(p => p.v !== null)
-      .sort((x,y) => x.v - y.v)
-      .map(p => `<span class="action-country-chip ${worst3.has(p.key)?'worst':''}">${p.code} ${p.v}%</span>`)
-      .join('');
-
+    const chips = a.byPais.filter(p=>p.vA!==null).sort((x,y)=>x.vA-y.vA).map(p=>
+      `<span class="action-country-chip ${worst3.has(p.key)?'worst':''}">${p.code} ${p.vA}%${cmpInfo&&p.vB!==null?` → ${p.vB}%${p.vB>p.vA?' ↑':' ↓'}`:''}</span>`
+    ).join('');
+    const avgDisplay = cmpInfo&&a.avgB!==null
+      ? `${a.avg}% → ${a.avgB}%${a.avgB>a.avg?' ↑':' ↓'}`
+      : `${a.avg}%`;
     return `<div class="action-card ${tipo}">
-      <div class="action-rank">Prioridad ${i+1} · ${tipo === 'critico' ? 'Crítico' : 'Atención'}</div>
+      <div class="action-rank">Prioridad ${i+1} · ${tipo==='critico'?'Crítico':'Atención'}</div>
       <div class="action-metric">${a.label}</div>
-      <div class="action-avg">${a.avg}%</div>
+      <div class="action-avg">${avgDisplay}</div>
       <div class="action-desc">${a.desc}</div>
       <div class="action-countries">${chips}</div>
     </div>`;
   }).join('');
+}
+
+// ── FETCH ─────────────────────────────────────────────────────────────────────
+async function fetchPais(pais, chip) {
+  chip.classList.add('loading');
+  try {
+    const res = await fetch(`${ENDPOINT}?action=pais&pais=${encodeURIComponent(pais.key)}`);
+    const json = await res.json();
+    chip.classList.remove('loading'); chip.classList.add('done'); chip.textContent=`${pais.code} ✓`;
+    return { ...pais, headers:json.headers.map(h=>h.toString().trim()), rows:json.rows };
+  } catch(e) {
+    chip.classList.remove('loading'); chip.classList.add('error'); chip.textContent=`${pais.code} ✗`;
+    return { ...pais, headers:[], rows:[] };
+  }
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
@@ -838,14 +861,35 @@ async function init() {
   const list = document.getElementById('progress-list');
   const chips = PAISES.map(p => {
     const chip = document.createElement('span');
-    chip.className = 'progress-chip';
-    chip.textContent = p.code;
-    list.appendChild(chip);
-    return chip;
+    chip.className='progress-chip'; chip.textContent=p.code;
+    list.appendChild(chip); return chip;
+  });
+  rawData = await Promise.all(PAISES.map((p,i) => fetchPais(p,chips[i])));
+
+  // Collect all revisions across all countries
+  revisions = [...new Set(rawData.flatMap(pd => {
+    const iRev = idxH(pd.headers, "Número de revisión");
+    return pd.rows.map(r=>(r[iRev]||"").toString().trim()).filter(Boolean);
+  }))].sort((a,b)=>parseInt(a.replace(/\D/g,''))-parseInt(b.replace(/\D/g,'')));
+
+  // Build filter buttons
+  document.getElementById('filter-mode').innerHTML = ['all',...revisions].map(r=>
+    `<button class="rev-btn${r==='all'?' active':''}" data-rev="${r}" onclick="filterByRevision('${r}')">${r==='all'?'Todas':r}</button>`
+  ).join('');
+
+  // Build compare selects
+  ['cmp-a','cmp-b'].forEach((id,idx) => {
+    const sel = document.getElementById(id);
+    sel.innerHTML = revisions.map(r=>`<option value="${r}">${r}</option>`).join('');
+    if(idx < revisions.length) sel.selectedIndex = idx;
   });
 
-  const results = await Promise.all(PAISES.map((p, i) => fetchPais(p, chips[i])));
-  renderAll(results);
+  document.getElementById('hero-loading').style.display='none';
+  document.getElementById('kpi-strip').style.display='grid';
+  document.getElementById('rev-controls').style.display='flex';
+  document.getElementById('main-content').style.display='block';
+
+  filterByRevision('all');
 }
 
 init();
