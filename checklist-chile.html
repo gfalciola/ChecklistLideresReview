@@ -7,398 +7,154 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --red: #C0392B; --red-dark: #96281B; --red-light: #FAECE7;
+  --green: #1D9E75; --green-light: #E1F5EE;
+  --orange: #BA7517; --orange-light: #FAEEDA;
+  --blue: #185FA5;
+  --gray-bg: #F7F6F3; --gray-border: #E4E2DC;
+  --text: #1A1A1A; --text-muted: #6B6B6B; --white: #FFFFFF;
+}
+body { font-family:'Inter',sans-serif; background:var(--gray-bg); color:var(--text); font-size:15px; line-height:1.6; }
 
-  :root {
-    --red: #C0392B;
-    --red-dark: #96281B;
-    --red-light: #FAECE7;
-    --green: #1D9E75;
-    --green-light: #E1F5EE;
-    --orange: #BA7517;
-    --orange-light: #FAEEDA;
-    --gray-bg: #F7F6F3;
-    --gray-border: #E4E2DC;
-    --text: #1A1A1A;
-    --text-muted: #6B6B6B;
-    --white: #FFFFFF;
-  }
+/* HERO */
+.hero { background:var(--red); color:white; padding:2.5rem 2rem 2rem; position:relative; overflow:hidden; }
+.hero::after { content:''; position:absolute; bottom:-40px; right:-40px; width:220px; height:220px; border-radius:50%; background:rgba(255,255,255,0.05); }
+.hero-nav a { color:rgba(255,255,255,0.7); text-decoration:none; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; }
+.hero-nav a:hover { color:white; }
+.hero-eyebrow { font-size:11px; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; opacity:.75; margin:0.75rem 0 0.4rem; }
+.hero-title { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,4vw,2.6rem); font-weight:700; line-height:1.15; margin-bottom:0.4rem; }
+.hero-sub { font-size:13px; opacity:.8; margin-bottom:1.5rem; }
+.hero-brecha { display:inline-block; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); border-radius:10px; padding:0.875rem 1.25rem; }
+.hero-brecha-label { font-size:11px; opacity:.75; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.2rem; }
+.hero-brecha-nums { font-size:1.8rem; font-weight:600; letter-spacing:-0.02em; }
+.hero-brecha-desc { font-size:12px; opacity:.75; margin-top:0.2rem; }
+.hero-loading { font-size:13px; opacity:.8; display:flex; align-items:center; gap:8px; }
+.spinner { width:16px; height:16px; border:2px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin .8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
 
-  body {
-    font-family: 'Inter', sans-serif;
-    background: var(--gray-bg);
-    color: var(--text);
-    font-size: 15px;
-    line-height: 1.6;
-  }
+/* KPI STRIP */
+.kpi-strip { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:1px; background:var(--gray-border); border-bottom:1px solid var(--gray-border); }
+.kpi-cell { background:var(--white); padding:1.1rem 1rem; text-align:center; }
+.kpi-val { font-size:1.6rem; font-weight:600; line-height:1; margin-bottom:4px; }
+.kpi-label { font-size:10.5px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; line-height:1.3; }
+.kpi-cell.red .kpi-val { color:var(--red); }
+.kpi-cell.green .kpi-val { color:var(--green); }
+.kpi-cell.orange .kpi-val { color:var(--orange); }
 
-  /* HERO */
-  .hero {
-    background: var(--red);
-    color: white;
-    padding: 3rem 2rem 2.5rem;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::after {
-    content: '';
-    position: absolute;
-    bottom: -40px; right: -40px;
-    width: 220px; height: 220px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.05);
-  }
-  .hero-eyebrow {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    opacity: 0.75;
-    margin-bottom: 0.5rem;
-  }
-  .hero-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1.8rem, 4vw, 2.6rem);
-    font-weight: 700;
-    line-height: 1.15;
-    margin-bottom: 0.5rem;
-  }
-  .hero-sub {
-    font-size: 13px;
-    opacity: 0.8;
-    margin-bottom: 2rem;
-  }
-  .hero-brecha {
-    display: inline-block;
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 10px;
-    padding: 1rem 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-  .hero-brecha-label {
-    font-size: 11px;
-    opacity: 0.75;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 0.25rem;
-  }
-  .hero-brecha-nums {
-    font-size: 2rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-  }
-  .hero-brecha-desc {
-    font-size: 12px;
-    opacity: 0.75;
-    margin-top: 0.2rem;
-  }
-  .hero-loading {
-    font-size: 13px;
-    opacity: 0.8;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .spinner {
-    width: 16px; height: 16px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: white;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
+/* REVISION CONTROLS */
+.rev-controls { background:var(--white); border-bottom:1px solid var(--gray-border); padding:0.75rem 1.5rem; display:flex; align-items:center; flex-wrap:wrap; gap:12px; }
+.rev-mode-tabs { display:flex; border:1px solid var(--gray-border); border-radius:6px; overflow:hidden; }
+.rev-mode-tab { padding:5px 14px; font-size:12px; font-weight:500; cursor:pointer; background:var(--white); color:var(--text-muted); border:none; transition:all .15s; }
+.rev-mode-tab.active { background:var(--red); color:white; }
+.rev-sep { width:1px; background:var(--gray-border); margin:0 4px; }
+.rev-filter-btns { display:flex; gap:5px; flex-wrap:wrap; }
+.rev-btn { padding:4px 12px; font-size:12px; font-weight:500; border:1px solid var(--gray-border); border-radius:20px; cursor:pointer; background:var(--white); color:var(--text-muted); transition:all .15s; white-space:nowrap; }
+.rev-btn.active { border-color:var(--red); background:var(--red-light); color:var(--red-dark); }
+.rev-compare-wrap { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-muted); }
+.rev-select { padding:4px 10px; font-size:12px; border:1px solid var(--gray-border); border-radius:6px; background:var(--white); cursor:pointer; color:var(--text); }
+.rev-compare-btn { padding:5px 14px; font-size:12px; font-weight:600; border:none; border-radius:6px; background:var(--red); color:white; cursor:pointer; transition:opacity .15s; }
+.rev-compare-btn:hover { opacity:.85; }
+.rev-n-badge { font-size:11px; color:var(--text-muted); }
+.rev-warning { font-size:11px; color:var(--orange); font-weight:500; }
 
-  /* KPI STRIP */
-  .kpi-strip {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 1px;
-    background: var(--gray-border);
-    border-bottom: 1px solid var(--gray-border);
-  }
-  .kpi-cell {
-    background: var(--white);
-    padding: 1.25rem 1rem;
-    text-align: center;
-  }
-  .kpi-val {
-    font-size: 1.75rem;
-    font-weight: 600;
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-  .kpi-label {
-    font-size: 11px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    line-height: 1.3;
-  }
-  .kpi-cell.red .kpi-val { color: var(--red); }
-  .kpi-cell.green .kpi-val { color: var(--green); }
-  .kpi-cell.orange .kpi-val { color: var(--orange); }
+/* CONTAINER */
+.container { max-width:860px; margin:0 auto; padding:2rem 1.5rem; }
+.section { margin-bottom:2.5rem; }
+.section-title { font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-muted); margin-bottom:1rem; display:flex; align-items:center; gap:8px; }
+.section-title::after { content:''; flex:1; height:1px; background:var(--gray-border); }
 
-  /* CONTENT */
-  .container { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem; }
+/* NOTA */
+.nota { background:#FFFBEB; border:1px solid #F9D46A; border-radius:8px; padding:.875rem 1rem; font-size:12px; color:#7A5A00; margin-bottom:1.5rem; line-height:1.5; }
+.nota.warning { background:#FFF3E0; border-color:#FFB74D; color:#7A4000; }
 
-  /* SECTION */
-  .section { margin-bottom: 2.5rem; }
-  .section-title {
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-muted);
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .section-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--gray-border);
-  }
+/* COMPARE MODE LABEL */
+.compare-label { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:500; padding:4px 10px; border-radius:4px; }
+.compare-label.a { background:rgba(29,158,117,0.12); color:#0A5A3A; }
+.compare-label.b { background:rgba(186,117,23,0.12); color:#7A4A0A; }
 
-  /* EMBUDO */
-  .embudo {
-    background: var(--white);
-    border: 1px solid var(--gray-border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1rem;
-  }
-  .embudo-title {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 1.25rem;
-    color: var(--text);
-  }
-  .embudo-step {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 10px;
-  }
-  .embudo-label {
-    width: 160px;
-    font-size: 12px;
-    color: var(--text-muted);
-    flex-shrink: 0;
-    text-align: right;
-  }
-  .embudo-bar-wrap {
-    flex: 1;
-    height: 28px;
-    background: #F0EEE8;
-    border-radius: 4px;
-    overflow: hidden;
-    position: relative;
-  }
-  .embudo-bar {
-    height: 100%;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    padding-left: 8px;
-    font-size: 12px;
-    font-weight: 600;
-    color: white;
-    transition: width 1s ease;
-    width: 0;
-  }
-  .embudo-note {
-    font-size: 12px;
-    color: var(--text-muted);
-    font-style: italic;
-    margin-top: 0.75rem;
-  }
+/* EMBUDO */
+.embudo { background:var(--white); border:1px solid var(--gray-border); border-radius:12px; padding:1.5rem; margin-bottom:1rem; }
+.embudo-title { font-size:14px; font-weight:600; margin-bottom:1.25rem; }
+.embudo-step { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+.embudo-label { width:160px; font-size:12px; color:var(--text-muted); flex-shrink:0; text-align:right; }
+.embudo-bar-wrap { flex:1; height:28px; background:#F0EEE8; border-radius:4px; overflow:hidden; position:relative; }
+.embudo-bar { height:100%; border-radius:4px; display:flex; align-items:center; padding-left:8px; font-size:12px; font-weight:600; color:white; transition:width .8s ease; width:0; }
+/* compare embudo */
+.embudo-compare-wrap { flex:1; display:flex; flex-direction:column; gap:3px; }
+.embudo-bar-row { display:flex; align-items:center; gap:6px; }
+.embudo-bar-track { flex:1; height:14px; background:#F0EEE8; border-radius:3px; overflow:hidden; }
+.embudo-bar-fill { height:100%; border-radius:3px; transition:width .8s ease; width:0; }
+.embudo-bar-pct { font-size:11px; font-weight:600; width:36px; text-align:right; }
+.embudo-delta { font-size:11px; font-weight:600; width:40px; }
+.embudo-note { font-size:12px; color:var(--text-muted); font-style:italic; margin-top:.75rem; }
 
-  /* CHARTS */
-  .charts-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
-  @media (max-width: 600px) { .charts-grid { grid-template-columns: 1fr; } }
-  .chart-card {
-    background: var(--white);
-    border: 1px solid var(--gray-border);
-    border-radius: 12px;
-    padding: 1.25rem;
-  }
-  .chart-card-title {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 1rem;
-  }
+/* CHARTS */
+.charts-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem; }
+@media(max-width:600px){.charts-grid{grid-template-columns:1fr;}}
+.chart-card { background:var(--white); border:1px solid var(--gray-border); border-radius:12px; padding:1.25rem; }
+.chart-card-title { font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:1rem; }
 
-  /* HORIZONTAL BAR LIST */
-  .bar-list { display: flex; flex-direction: column; gap: 7px; }
-  .bar-row { display: flex; align-items: center; gap: 8px; }
-  .bar-row-label {
-    font-size: 11.5px;
-    color: var(--text);
-    width: 155px;
-    flex-shrink: 0;
-    line-height: 1.25;
-  }
-  .bar-row-track {
-    flex: 1;
-    height: 18px;
-    background: #F0EEE8;
-    border-radius: 3px;
-    overflow: hidden;
-  }
-  .bar-row-fill {
-    height: 100%;
-    border-radius: 3px;
-    transition: width 1s ease;
-    width: 0;
-  }
-  .bar-row-pct {
-    font-size: 11.5px;
-    font-weight: 600;
-    width: 32px;
-    text-align: right;
-    flex-shrink: 0;
-  }
+/* BAR LIST */
+.bar-list { display:flex; flex-direction:column; gap:7px; }
+.bar-row { display:flex; align-items:center; gap:8px; }
+.bar-row-label { font-size:11.5px; color:var(--text); width:155px; flex-shrink:0; line-height:1.25; }
+.bar-row-track { flex:1; height:18px; background:#F0EEE8; border-radius:3px; overflow:hidden; }
+.bar-row-fill { height:100%; border-radius:3px; transition:width .8s ease; width:0; }
+.bar-row-pct { font-size:11.5px; font-weight:600; width:32px; text-align:right; flex-shrink:0; }
+/* compare bars */
+.bar-compare-wrap { flex:1; display:flex; flex-direction:column; gap:2px; }
+.bar-compare-track { height:10px; background:#F0EEE8; border-radius:2px; overflow:hidden; }
+.bar-compare-fill { height:100%; border-radius:2px; transition:width .8s ease; width:0; }
+.bar-delta { font-size:10.5px; font-weight:600; width:38px; text-align:right; flex-shrink:0; }
 
-  /* CONCLUSIONES */
-  .conclusion-list { display: flex; flex-direction: column; gap: 10px; }
-  .conclusion-item {
-    display: flex;
-    gap: 12px;
-    background: var(--white);
-    border: 1px solid var(--gray-border);
-    border-radius: 10px;
-    padding: 1rem 1.25rem;
-    align-items: flex-start;
-  }
-  .conclusion-item.critico { border-left: 3px solid var(--red); }
-  .conclusion-item.atencion { border-left: 3px solid var(--orange); }
-  .conclusion-item.fortaleza { border-left: 3px solid var(--green); }
-  .conclusion-badge {
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 3px 7px;
-    border-radius: 4px;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-  .critico .conclusion-badge { background: var(--red-light); color: var(--red-dark); }
-  .atencion .conclusion-badge { background: var(--orange-light); color: #7A4A0A; }
-  .fortaleza .conclusion-badge { background: var(--green-light); color: #0A5A3A; }
-  .conclusion-body {}
-  .conclusion-title { font-size: 13.5px; font-weight: 600; margin-bottom: 3px; }
-  .conclusion-text { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+/* CONCLUSIONES */
+.conclusion-list { display:flex; flex-direction:column; gap:10px; }
+.conclusion-item { display:flex; gap:12px; background:var(--white); border:1px solid var(--gray-border); border-radius:10px; padding:1rem 1.25rem; align-items:flex-start; }
+.conclusion-item.critico { border-left:3px solid var(--red); }
+.conclusion-item.atencion { border-left:3px solid var(--orange); }
+.conclusion-item.fortaleza { border-left:3px solid var(--green); }
+.conclusion-badge { font-size:9px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; padding:3px 7px; border-radius:4px; flex-shrink:0; margin-top:2px; }
+.critico .conclusion-badge { background:var(--red-light); color:var(--red-dark); }
+.atencion .conclusion-badge { background:var(--orange-light); color:#7A4A0A; }
+.fortaleza .conclusion-badge { background:var(--green-light); color:#0A5A3A; }
+.conclusion-title { font-size:13.5px; font-weight:600; margin-bottom:3px; }
+.conclusion-text { font-size:12.5px; color:var(--text-muted); line-height:1.5; }
 
-  /* RECOMENDACIONES */
-  .rec-list { display: flex; flex-direction: column; gap: 8px; }
-  .rec-item {
-    display: flex;
-    gap: 12px;
-    background: var(--white);
-    border: 1px solid var(--gray-border);
-    border-radius: 10px;
-    padding: 1rem 1.25rem;
-    align-items: flex-start;
-  }
-  .rec-num {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--red);
-    flex-shrink: 0;
-    line-height: 1;
-    margin-top: 1px;
-    width: 20px;
-  }
-  .rec-title { font-size: 13.5px; font-weight: 600; margin-bottom: 3px; }
-  .rec-text { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+/* RECOMENDACIONES */
+.rec-list { display:flex; flex-direction:column; gap:8px; }
+.rec-item { display:flex; gap:12px; background:var(--white); border:1px solid var(--gray-border); border-radius:10px; padding:1rem 1.25rem; align-items:flex-start; }
+.rec-num { font-size:18px; font-weight:600; color:var(--red); flex-shrink:0; line-height:1; margin-top:1px; width:20px; }
+.rec-title { font-size:13.5px; font-weight:600; margin-bottom:3px; }
+.rec-text { font-size:12.5px; color:var(--text-muted); line-height:1.5; }
 
-  /* DIRECTOR TABLE */
-  .dir-table { width: 100%; border-collapse: collapse; }
-  .dir-table th {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-muted);
-    padding: 8px 10px;
-    text-align: left;
-    border-bottom: 1px solid var(--gray-border);
-    font-weight: 500;
-  }
-  .dir-table td {
-    padding: 10px;
-    font-size: 13px;
-    border-bottom: 1px solid var(--gray-border);
-    vertical-align: middle;
-  }
-  .dir-table tr:last-child td { border-bottom: none; }
-  .mini-bar-wrap {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .mini-bar-track {
-    flex: 1;
-    height: 8px;
-    background: #F0EEE8;
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .mini-bar-fill {
-    height: 100%;
-    border-radius: 2px;
-  }
-  .mini-bar-pct { font-size: 12px; font-weight: 600; width: 36px; }
+/* DIR TABLE */
+.dir-table { width:100%; border-collapse:collapse; }
+.dir-table th { font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); padding:8px 10px; text-align:left; border-bottom:1px solid var(--gray-border); font-weight:500; }
+.dir-table td { padding:10px; font-size:13px; border-bottom:1px solid var(--gray-border); vertical-align:middle; }
+.dir-table tr:last-child td { border-bottom:none; }
+.mini-bar-wrap { display:flex; align-items:center; gap:8px; }
+.mini-bar-track { flex:1; height:8px; background:#F0EEE8; border-radius:2px; overflow:hidden; }
+.mini-bar-fill { height:100%; border-radius:2px; }
+.mini-bar-pct { font-size:12px; font-weight:600; width:36px; }
 
-  /* FOOTER */
-  .footer {
-    text-align: center;
-    padding: 2rem;
-    font-size: 11.5px;
-    color: var(--text-muted);
-    border-top: 1px solid var(--gray-border);
-    line-height: 1.6;
-  }
+/* DONUTS */
+.donut-legend { display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+.donut-legend-item { display:flex; align-items:center; gap:5px; font-size:12px; color:var(--text-muted); }
+.donut-swatch { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
 
-  /* NOTA */
-  .nota {
-    background: #FFFBEB;
-    border: 1px solid #F9D46A;
-    border-radius: 8px;
-    padding: 0.875rem 1rem;
-    font-size: 12px;
-    color: #7A5A00;
-    margin-bottom: 1.5rem;
-    line-height: 1.5;
-  }
-
-  /* DONUT */
-  .donut-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
-  .donut-legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text-muted); }
-  .donut-swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.footer { text-align:center; padding:2rem; font-size:11.5px; color:var(--text-muted); border-top:1px solid var(--gray-border); line-height:1.6; }
 </style>
 </head>
 <body>
 
 <div class="hero" id="hero">
+  <div class="hero-nav"><a href="index.html">← Países</a></div>
   <div class="hero-eyebrow">Just América · Checklist Líderes · Plan 90 días</div>
   <h1 class="hero-title">Chile</h1>
   <p class="hero-sub" id="hero-sub">Cargando datos...</p>
-  <div id="hero-loading" class="hero-loading">
-    <div class="spinner"></div>
-    Consultando respuestas...
-  </div>
+  <div id="hero-loading" class="hero-loading"><div class="spinner"></div> Consultando respuestas...</div>
   <div id="hero-brecha" class="hero-brecha" style="display:none">
     <div class="hero-brecha-label">Brecha crítica · Embudo CIMAS</div>
     <div class="hero-brecha-nums" id="brecha-nums">—</div>
@@ -407,494 +163,482 @@
 </div>
 
 <div class="kpi-strip" id="kpi-strip" style="display:none">
-  <div class="kpi-cell red">
-    <div class="kpi-val" id="kpi-n">—</div>
-    <div class="kpi-label">Respuestas</div>
+  <div class="kpi-cell red"><div class="kpi-val" id="kpi-n">—</div><div class="kpi-label">Respuestas</div></div>
+  <div class="kpi-cell"><div class="kpi-val" id="kpi-dir">—</div><div class="kpi-label">Directores</div></div>
+  <div class="kpi-cell green"><div class="kpi-val" id="kpi-descargo">—</div><div class="kpi-label">Descargó guía CIMAS</div></div>
+  <div class="kpi-cell orange"><div class="kpi-val" id="kpi-revisa">—</div><div class="kpi-label">Revisa jueves CIMAS</div></div>
+  <div class="kpi-cell"><div class="kpi-val" id="kpi-enfoque">—</div><div class="kpi-label">Enfoque pleno</div></div>
+  <div class="kpi-cell green"><div class="kpi-val" id="kpi-prospeccion">—</div><div class="kpi-label">Depende de prospección</div></div>
+</div>
+
+<!-- REVISION CONTROLS -->
+<div class="rev-controls" id="rev-controls" style="display:none">
+  <div class="rev-mode-tabs">
+    <button class="rev-mode-tab active" onclick="setMode('filter')">Filtrar</button>
+    <button class="rev-mode-tab" onclick="setMode('compare')">Comparar</button>
   </div>
-  <div class="kpi-cell">
-    <div class="kpi-val" id="kpi-dir">—</div>
-    <div class="kpi-label">Directores</div>
+  <div class="rev-sep"></div>
+  <!-- FILTER MODE -->
+  <div id="filter-mode" class="rev-filter-btns"></div>
+  <!-- COMPARE MODE -->
+  <div id="compare-mode" style="display:none" class="rev-compare-wrap">
+    <select class="rev-select" id="cmp-a"></select>
+    <span>vs</span>
+    <select class="rev-select" id="cmp-b"></select>
+    <button class="rev-compare-btn" onclick="runCompare()">Comparar</button>
   </div>
-  <div class="kpi-cell green">
-    <div class="kpi-val" id="kpi-descargo">—</div>
-    <div class="kpi-label">Descargó guía CIMAS</div>
-  </div>
-  <div class="kpi-cell orange">
-    <div class="kpi-val" id="kpi-revisa">—</div>
-    <div class="kpi-label">Revisa jueves CIMAS</div>
-  </div>
-  <div class="kpi-cell">
-    <div class="kpi-val" id="kpi-enfoque">—</div>
-    <div class="kpi-label">Enfoque pleno</div>
-  </div>
-  <div class="kpi-cell green">
-    <div class="kpi-val" id="kpi-prospeccion">—</div>
-    <div class="kpi-label">Depende de prospección</div>
-  </div>
+  <span class="rev-n-badge" id="rev-n-badge"></span>
+  <span class="rev-warning" id="rev-warning"></span>
 </div>
 
 <div class="container" id="main-content" style="display:none">
-
   <div class="nota" id="nota-fiabilidad"></div>
-
-  <!-- EMBUDO CIMAS -->
   <div class="section">
     <div class="section-title">Embudo de implementación CIMAS</div>
     <div class="embudo">
-      <div class="embudo-title">De conocer la guía a aplicarla cada semana</div>
+      <div class="embudo-title" id="embudo-title">De conocer la guía a aplicarla cada semana</div>
       <div id="embudo-steps"></div>
       <p class="embudo-note" id="embudo-note"></p>
     </div>
   </div>
-
-  <!-- CHARTS ROW -->
   <div class="charts-grid">
     <div class="chart-card">
       <div class="chart-card-title">Enfoque personal</div>
-      <div style="position:relative; height:160px;">
-        <canvas id="chartEnfoque" role="img" aria-label="Donut chart de nivel de enfoque personal"></canvas>
-      </div>
+      <div style="position:relative;height:160px;"><canvas id="chartEnfoque"></canvas></div>
       <div class="donut-legend" id="legend-enfoque"></div>
     </div>
     <div class="chart-card">
       <div class="chart-card-title">Fuente de ingreso declarada</div>
-      <div style="position:relative; height:160px;">
-        <canvas id="chartIngreso" role="img" aria-label="Donut chart de fuente de ingreso"></canvas>
-      </div>
+      <div style="position:relative;height:160px;"><canvas id="chartIngreso"></canvas></div>
       <div class="donut-legend" id="legend-ingreso"></div>
     </div>
   </div>
-
-  <!-- PRÁCTICAS INDIVIDUALES -->
   <div class="section">
     <div class="section-title">Prácticas individuales del líder</div>
-    <div class="chart-card">
-      <div class="bar-list" id="bars-individual"></div>
-    </div>
+    <div class="chart-card"><div class="bar-list" id="bars-individual"></div></div>
   </div>
-
-  <!-- LIDERAZGO / DUPLICACIÓN -->
   <div class="section">
     <div class="section-title">Liderazgo de equipo y duplicación</div>
-    <div class="chart-card">
-      <div class="bar-list" id="bars-liderazgo"></div>
-    </div>
+    <div class="chart-card"><div class="bar-list" id="bars-liderazgo"></div></div>
   </div>
-
-  <!-- POR DIRECTOR -->
   <div class="section">
     <div class="section-title">CIMAS por director</div>
     <div class="chart-card">
-      <table class="dir-table" id="dir-table">
-        <thead>
-          <tr>
-            <th>Director</th>
-            <th>N</th>
-            <th>Descargó CIMAS</th>
-            <th>Revisa jueves</th>
-          </tr>
-        </thead>
+      <table class="dir-table">
+        <thead><tr><th>Director</th><th>N</th><th>Descargó CIMAS</th><th>Revisa jueves</th></tr></thead>
         <tbody id="dir-tbody"></tbody>
       </table>
     </div>
   </div>
-
-  <!-- CONCLUSIONES -->
   <div class="section">
     <div class="section-title">Conclusiones estratégicas</div>
     <div class="conclusion-list" id="conclusiones"></div>
   </div>
-
-  <!-- RECOMENDACIONES -->
   <div class="section">
     <div class="section-title">Recomendaciones priorizadas</div>
     <div class="rec-list" id="recomendaciones"></div>
   </div>
-
 </div>
 
 <div class="footer">
-  Generado a partir de CheckList_Líderes (Responses) · Argentina · Datos auto-reportados, sin auditoría independiente.<br>
-  Porcentajes = conteo directo (Sí ÷ total respondido × 100). Priorización por tamaño de brecha, no validada con el negocio.
+  Generado a partir de CheckList_Líderes · Chile · Datos auto-reportados, sin auditoría independiente.<br>
+  Porcentajes = conteo directo (Sí ÷ total respondido × 100).
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 const ENDPOINT = "https://script.google.com/macros/s/AKfycbxZe_44XNkXtwSbA4hfVe_fRF3ZqZxgJB-5fftq2djQrFaGArtK_GL0_mEVKLsj76cv/exec";
 const PAIS = "Chile";
+const PAIS_DISPLAY = "Chile";
 
-const RED = "#C0392B";
-const GREEN = "#1D9E75";
-const ORANGE = "#BA7517";
-const BLUE = "#185FA5";
-const GRAY = "#B4B2A9";
+const RED="#C0392B", GREEN="#1D9E75", ORANGE="#BA7517", BLUE="#185FA5", GRAY="#B4B2A9";
 
-function pct(rows, colIdx, val) {
-  if (!rows.length) return 0;
-  const count = rows.filter(r => (r[colIdx] || "").toString().trim().toLowerCase() === val.toLowerCase()).length;
-  return Math.round(count / rows.length * 100);
+let allRows = [], headers = [], iMap = {}, revisions = [], currentMode = 'filter', chartEnfoque = null, chartIngreso = null;
+
+// ── UTILS ────────────────────────────────────────────────────────────────────
+const pctSi = (rows, i) => {
+  if (!rows.length || i < 0) return 0;
+  return Math.round(rows.filter(r=>(r[i]||"").toString().trim().toLowerCase()==="sí").length/rows.length*100);
+};
+const pctC = (rows, i, f) => {
+  if (!rows.length || i < 0) return 0;
+  return Math.round(rows.filter(r=>(r[i]||"").toString().toLowerCase().includes(f.toLowerCase())).length/rows.length*100);
+};
+const barColor = v => v>=60 ? GREEN : v>=35 ? ORANGE : RED;
+const delta = (a,b) => {
+  const d = b - a;
+  if (d === 0) return `<span style="color:#999">→ 0</span>`;
+  return d > 0
+    ? `<span style="color:${GREEN}">↑${d}</span>`
+    : `<span style="color:${RED}">↓${Math.abs(d)}</span>`;
+};
+
+// ── INDEX MAP ────────────────────────────────────────────────────────────────
+function buildIndexMap(h) {
+  const find = f => h.findIndex(x => x.toLowerCase().includes(f.toLowerCase()));
+  return {
+    revision:     find("Número de revisión"),
+    director:     find("Director responsable"),
+    descargo:     find("Descargaste y estudiaste la Guía CIMAS"),
+    planifica5:   find("planificando actividades en cada una de las 5 etapas"),
+    planificaJ:   find("Planificas tu semana siguiente cada jueves"),
+    revisaJ:      find("Revisas y analizas tu semana anterior cada jueves"),
+    seguimCIMAS:  find("seguimiento a cada consultor de tu grupo utilizando la metodología CIMAS"),
+    enfoque:      find("nivel de enfoque"),
+    ingreso:      find("ingreso depende principalmente"),
+    materiales:   find("materiales necesarios"),
+    exp3:         find("realizando al menos 3 Experiencias"),
+    expExpress:   find("realizaste la nueva Experiencia Express"),
+    hable:        find("Hoy hablé de Just"),
+    metaViajes:   find("meta relacionada con los viajes de incentivo"),
+    bio:          find("biografía (bio)"),
+    enlacePub:    find("publicaciones incluyen tu enlace personal"),
+    marca:        find("Publicas contenido en redes sociales que construye tu marca"),
+    demo:         find("demostración sensorial"),
+    cta:          find("llamada a la acción"),
+    guiaExp:      find("Explorando la Oportunidad"),
+    comparte:     find("historia personal de transformación"),
+    expNuevas:    find("Experiencias Just que nunca habías hecho"),
+    registra:     find("Registras evidencia"),
+    captador:     find("captador de contactos"),
+    avanza:       find("formación Just, completando cursos"),
+    talento:      find("identificando dentro de tu equipo personas con potencial"),
+    bloqueos:     find("bloqueos emocionales"),
+    construye:    find("nueva propuesta de valor"),
+    metaEquipo:   find("todo en tu equipo tienen clara su meta"),
+    reconoce:     find("Reconoces y celebras públicamente"),
+    acompana:     find("Acompañas a los consultores"),
+    nuevasGuias:  find("equipo está utilizando también las nuevas Guías"),
+    casos:        find("Compartes casos reales"),
+    corrige:      find("metodología CIMAS para corregir"),
+    cursos:       find("consultores realizan entre 2 y 3 cursos"),
+    aceler:       find("Programa de Aceleración Digital"),
+    mide:         find("midiendo el crecimiento de unidades"),
+    foco:         find("manteniendo el foco"),
+    entrena:      find("entrenando y acompañando"),
+    energia:      find("transmitiendo energía positiva"),
+  };
 }
 
-function pctContains(rows, colIdx, fragment) {
-  if (!rows.length) return 0;
-  const count = rows.filter(r => (r[colIdx] || "").toString().toLowerCase().includes(fragment.toLowerCase())).length;
-  return Math.round(count / rows.length * 100);
+// ── MODE TOGGLE ──────────────────────────────────────────────────────────────
+function setMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.rev-mode-tab').forEach((t,i)=>t.classList.toggle('active', (i===0&&mode==='filter')||(i===1&&mode==='compare')));
+  document.getElementById('filter-mode').style.display = mode==='filter' ? 'flex' : 'none';
+  document.getElementById('compare-mode').style.display = mode==='compare' ? 'flex' : 'none';
+  if (mode==='filter') filterByRevision(document.querySelector('.rev-btn.active')?.dataset.rev || 'all');
 }
 
-function barColor(v) {
-  if (v >= 60) return GREEN;
-  if (v >= 35) return ORANGE;
-  return RED;
+// ── FILTER ───────────────────────────────────────────────────────────────────
+function filterByRevision(rev) {
+  document.querySelectorAll('.rev-btn').forEach(b => b.classList.toggle('active', b.dataset.rev === rev));
+  const filtered = rev === 'all' ? allRows : allRows.filter(r => (r[iMap.revision]||"").toString().trim() === rev);
+  updateBadge(filtered.length);
+  renderSingle(filtered, null, null);
 }
 
-function renderBar(label, pctVal) {
-  return `<div class="bar-row">
-    <span class="bar-row-label">${label}</span>
-    <div class="bar-row-track">
-      <div class="bar-row-fill" style="background:${barColor(pctVal)}" data-pct="${pctVal}"></div>
-    </div>
-    <span class="bar-row-pct" style="color:${barColor(pctVal)}">${pctVal}%</span>
-  </div>`;
+function updateBadge(n) {
+  document.getElementById('rev-n-badge').textContent = `n = ${n}`;
+  const warn = document.getElementById('rev-warning');
+  warn.textContent = n < 15 && n > 0 ? '⚠ Muestra pequeña, interpretar con cautela' : '';
 }
 
-function animateBars() {
-  document.querySelectorAll('[data-pct]').forEach(el => {
-    const v = el.dataset.pct;
-    setTimeout(() => { el.style.width = v + '%'; }, 100);
-  });
+// ── COMPARE ──────────────────────────────────────────────────────────────────
+function runCompare() {
+  const a = document.getElementById('cmp-a').value;
+  const b = document.getElementById('cmp-b').value;
+  if (a === b) { alert('Seleccioná dos revisiones diferentes'); return; }
+  const rowsA = allRows.filter(r => (r[iMap.revision]||"").toString().trim() === a);
+  const rowsB = allRows.filter(r => (r[iMap.revision]||"").toString().trim() === b);
+  updateBadge(rowsA.length + rowsB.length);
+  renderSingle(rowsA, rowsB, { a, b });
 }
 
-function donutChart(canvasId, labels, values, colors) {
-  const ctx = document.getElementById(canvasId);
-  if (!ctx) return;
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels,
-      datasets: [{
-        data: values,
-        backgroundColor: colors,
-        borderWidth: 2,
-        borderColor: '#fff',
-        hoverOffset: 4
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      cutout: '65%',
-      plugins: { legend: { display: false }, tooltip: {
-        callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` }
-      }}
-    }
-  });
-}
-
-function renderLegend(containerId, labels, values, colors) {
-  const el = document.getElementById(containerId);
-  if (!el) return;
-  el.innerHTML = labels.map((l, i) =>
-    `<span class="donut-legend-item">
-      <span class="donut-swatch" style="background:${colors[i]}"></span>${l} ${values[i]}%
-    </span>`
-  ).join('');
-}
-
-async function loadData() {
-  try {
-    const url = `${ENDPOINT}?action=pais&pais=${encodeURIComponent(PAIS)}`;
-    const res = await fetch(url);
-    const json = await res.json();
-    renderDashboard(json);
-  } catch(e) {
-    document.getElementById('hero-loading').innerHTML =
-      '<span style="color:rgba(255,255,255,0.8)">Error al cargar datos. Verificá la conexión e intentá de nuevo.</span>';
-  }
-}
-
-function renderDashboard(data) {
-  const headers = data.headers.map(h => h.toString().trim());
-  const rows = data.rows;
+// ── RENDER SINGLE (filter mode or one side of compare) ───────────────────────
+function renderSingle(rows, rowsB, cmpInfo) {
   const n = rows.length;
+  const im = iMap;
+  const s = k => pctSi(rows, im[k]);
+  const c = (k, f) => pctC(rows, im[k], f);
 
-  const idx = name => headers.findIndex(h => h.toLowerCase().includes(name.toLowerCase()));
-
-  const iDescargo    = idx("Descargaste y estudiaste la Guía CIMAS");
-  const iPlanifica5  = idx("planificando actividades en cada una de las 5 etapas");
-  const iRevisaJueves = idx("Revisas y analizas tu semana anterior cada jueves");
-  const iPlanificaJueves = idx("Planificas tu semana siguiente cada jueves");
-  const iSeguimCIMAS = idx("seguimiento a cada consultor de tu grupo utilizando la metodología CIMAS");
-  const iEnfoque     = idx("nivel de enfoque");
-  const iIngreso     = idx("ingreso depende principalmente");
-  const iMateriales  = idx("materiales necesarios");
-  const i3exp        = idx("realizando al menos 3 Experiencias");
-  const iExpress     = idx("realizaste la nueva Experiencia Express");
-  const iHable       = idx("Hoy hablé de Just");
-  const iMeta        = idx("meta relacionada con los viajes de incentivo");
-  const iBio         = idx("biografía (bio)");
-  const iEnlacePub   = idx("publicaciones incluyen tu enlace personal");
-  const iMarca       = idx("Publicas contenido en redes sociales que construye tu marca");
-  const iDemo        = idx("demostración sensorial");
-  const iCTA         = idx("llamada a la acción");
-  const iGuiaExp     = idx("Explorando la Oportunidad");
-  const iComparte    = idx("historia personal de transformación");
-  const iExpNuevas   = idx("Experiencias Just que nunca habías hecho");
-  const iRegistra    = idx("Registras evidencia");
-  const iCaptador    = idx("captador de contactos");
-  const iAvanza      = idx("formación Just, completando cursos");
-  const iTalento     = idx("identificando dentro de tu equipo personas con potencial");
-  const iBloqueos    = idx("bloqueos emocionales");
-  const iConstruye   = idx("nueva propuesta de valor");
-  const iMetaEquipo  = idx("todo en tu equipo tienen clara su meta");
-  const iReconoce    = idx("Reconoces y celebras públicamente");
-  const iAcompana    = idx("Acompañas a los consultores");
-  const iNuevasGuias = idx("equipo está utilizando también las nuevas Guías");
-  const iCasos       = idx("Compartes casos reales");
-  const iCorrige     = idx("metodología CIMAS para corregir");
-  const iCursos      = idx("consultores realizan entre 2 y 3 cursos");
-  const iAceler      = idx("Programa de Aceleración Digital");
-  const iMide        = idx("midiendo el crecimiento de unidades");
-  const iEspera      = idx("Estás esperando las promociones");
-  const iFoco        = idx("manteniendo el foco");
-  const iEntrena     = idx("entrenando y acompañando");
-  const iEnergia     = idx("transmitiendo energía positiva");
-  const iDirector    = idx("Director responsable");
-  const iPais        = headers.indexOf("País:");
-
-  const pS = (i) => pct(rows, i, "Sí");
-
-  const descargo     = pS(iDescargo);
-  const planifica5   = pS(iPlanifica5);
-  const planificaJ   = pS(iPlanificaJueves);
-  const revisaJ      = pS(iRevisaJueves);
-  const seguimCIMAS  = pS(iSeguimCIMAS);
-  const siempre      = pctContains(rows, iEnfoque, "siempre");
-  const prospeccion  = pctContains(rows, iIngreso, "prospecc");
-  const promociones  = pctContains(rows, iIngreso, "promoci");
-  const mixto        = 100 - prospeccion - promociones;
-
-  // KPIs
-  document.getElementById('kpi-n').textContent = n;
-  const directores = [...new Set(rows.map(r => (r[iDirector]||"").toString().trim()))].filter(Boolean);
-  document.getElementById('kpi-dir').textContent = directores.length;
-  document.getElementById('kpi-descargo').textContent = descargo + '%';
-  document.getElementById('kpi-revisa').textContent = revisaJ + '%';
-  document.getElementById('kpi-enfoque').textContent = siempre + '%';
-  document.getElementById('kpi-prospeccion').textContent = prospeccion + '%';
-
-  // Hero
-  document.getElementById('hero-loading').style.display = 'none';
-  document.getElementById('hero-sub').textContent = `Plan de 90 días · CIMAS, nuevas guías y Estrategia SwissJust · ${n} respuestas`;
-  document.getElementById('hero-brecha').style.display = 'inline-block';
-  document.getElementById('brecha-nums').textContent = `${descargo}% → ${revisaJ}%`;
-  document.getElementById('kpi-strip').style.display = 'grid';
-  document.getElementById('main-content').style.display = 'block';
+  // KPIs (only update in filter mode)
+  if (!cmpInfo) {
+    document.getElementById('kpi-n').textContent = n;
+    const dirs = [...new Set(rows.map(r=>(r[im.director]||"").toString().trim()))].filter(Boolean);
+    document.getElementById('kpi-dir').textContent = dirs.length;
+    document.getElementById('kpi-descargo').textContent = s('descargo')+'%';
+    document.getElementById('kpi-revisa').textContent   = s('revisaJ')+'%';
+    document.getElementById('kpi-enfoque').textContent  = c('enfoque','siempre')+'%';
+    document.getElementById('kpi-prospeccion').textContent = c('ingreso','prospecc')+'%';
+    document.getElementById('brecha-nums').textContent = `${s('descargo')}% → ${s('revisaJ')}%`;
+  }
 
   // Nota
+  const revLabel = cmpInfo ? `Comparando ${cmpInfo.a} vs ${cmpInfo.b}` : `n=${n} respuestas`;
   document.getElementById('nota-fiabilidad').innerHTML =
-    `<strong>Nota de fiabilidad:</strong> n=${n} respuestas de Argentina. Porcentajes = conteo directo (Sí ÷ total respondido × 100). Datos auto-reportados, sin auditoría independiente.`;
+    `<strong>Nota de fiabilidad:</strong> ${revLabel} · ${PAIS_DISPLAY}. Porcentajes = conteo directo (Sí ÷ total). Datos auto-reportados.`;
 
   // EMBUDO
-  const embudo = [
-    { label: "Descargó la guía", val: descargo, color: GREEN },
-    { label: "Planifica 5 etapas", val: planifica5, color: "#5DADE2" },
-    { label: "Planifica los jueves", val: planificaJ, color: ORANGE },
-    { label: "Revisa los jueves", val: revisaJ, color: RED },
-    { label: "Seguim. CIMAS al equipo", val: seguimCIMAS, color: "#8E44AD" },
+  const embudoDefs = [
+    { label:"Descargó la guía",        key:"descargo",   color:GREEN },
+    { label:"Planifica 5 etapas",      key:"planifica5", color:"#5DADE2" },
+    { label:"Planifica los jueves",    key:"planificaJ", color:ORANGE },
+    { label:"Revisa los jueves",       key:"revisaJ",    color:RED },
+    { label:"Seguim. CIMAS al equipo", key:"seguimCIMAS",color:"#8E44AD" },
   ];
-  document.getElementById('embudo-steps').innerHTML = embudo.map(e => `
-    <div class="embudo-step">
-      <span class="embudo-label">${e.label}</span>
-      <div class="embudo-bar-wrap">
-        <div class="embudo-bar" data-pct="${e.val}" style="background:${e.color}">${e.val}%</div>
-      </div>
-    </div>`).join('');
-  document.getElementById('embudo-note').textContent =
-    `Cae de ${descargo}% que la descargó a ${revisaJ}% que la revisa semanalmente. Alta conciencia del método, casi nula ejecución semanal: el cuello de botella está en el hábito, no en el acceso.`;
 
-  // DONUTS
-  donutChart('chartEnfoque',
-    ['Siempre enfocado', 'A veces'],
-    [siempre, 100 - siempre],
-    [GREEN, GRAY]);
-  renderLegend('legend-enfoque',
-    ['Siempre', 'A veces'],
-    [siempre, 100 - siempre],
-    [GREEN, GRAY]);
+  if (!cmpInfo) {
+    document.getElementById('embudo-title').textContent = 'De conocer la guía a aplicarla cada semana';
+    document.getElementById('embudo-steps').innerHTML = embudoDefs.map(e => {
+      const v = s(e.key);
+      return `<div class="embudo-step">
+        <span class="embudo-label">${e.label}</span>
+        <div class="embudo-bar-wrap"><div class="embudo-bar" data-pct="${v}" style="background:${e.color}">${v}%</div></div>
+      </div>`;
+    }).join('');
+    document.getElementById('embudo-note').textContent =
+      `Cae de ${s('descargo')}% que la descargó a ${s('revisaJ')}% que la revisa semanalmente.`;
+  } else {
+    // compare embudo
+    document.getElementById('embudo-title').innerHTML =
+      `<span class="compare-label a">■ ${cmpInfo.a}</span>&nbsp; vs &nbsp;<span class="compare-label b">■ ${cmpInfo.b}</span>`;
+    const sB = k => pctSi(rowsB, im[k]);
+    document.getElementById('embudo-steps').innerHTML = embudoDefs.map(e => {
+      const va = s(e.key), vb = sB(e.key);
+      return `<div class="embudo-step">
+        <span class="embudo-label">${e.label}</span>
+        <div class="embudo-compare-wrap">
+          <div class="embudo-bar-row">
+            <div class="embudo-bar-track"><div class="embudo-bar-fill" data-pct="${va}" style="background:${GREEN};opacity:.85"></div></div>
+            <span class="embudo-bar-pct" style="color:${GREEN}">${va}%</span>
+          </div>
+          <div class="embudo-bar-row">
+            <div class="embudo-bar-track"><div class="embudo-bar-fill" data-pct="${vb}" style="background:${ORANGE};opacity:.85"></div></div>
+            <span class="embudo-bar-pct" style="color:${ORANGE}">${vb}%</span>
+            ${delta(va,vb)}
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+    document.getElementById('embudo-note').textContent = '';
+  }
 
-  donutChart('chartIngreso',
-    ['Prospección', 'Promociones', 'Mixto'],
-    [prospeccion, promociones, Math.max(0, mixto)],
-    [GREEN, RED, BLUE]);
-  renderLegend('legend-ingreso',
-    ['Prospección', 'Promociones', 'Mixto'],
-    [prospeccion, promociones, Math.max(0, mixto)],
-    [GREEN, RED, BLUE]);
+  // DONUTS (filter mode only, compare shows text)
+  if (!cmpInfo) {
+    const siempre = c('enfoque','siempre'), prosp = c('ingreso','prospecc'), prom = c('ingreso','promoci');
+    renderDonut('chartEnfoque', ['Siempre','A veces'], [siempre, 100-siempre], [GREEN, GRAY], 'legend-enfoque');
+    renderDonut('chartIngreso', ['Prospección','Promociones','Mixto'], [prosp, prom, Math.max(0,100-prosp-prom)], [GREEN,RED,BLUE], 'legend-ingreso');
+  } else {
+    document.getElementById('chartEnfoque').parentElement.style.display = 'none';
+    document.getElementById('legend-enfoque').innerHTML = '';
+    document.getElementById('chartIngreso').parentElement.style.display = 'none';
+    document.getElementById('legend-ingreso').innerHTML = '';
+  }
 
-  // PRÁCTICAS INDIVIDUALES
-  const pracs = [
-    ["Materiales listos", pS(iMateriales)],
-    ["Hablé de Just hoy", pS(iHable)],
-    ["3+ Experiencias/sem", pS(i3exp)],
-    ["Experiencia Express", pS(iExpress)],
-    ["Publica marca personal", pS(iMarca)],
-    ["Exp. nuevas (zona confort)", pS(iExpNuevas)],
-    ["Registra evidencia", pS(iRegistra)],
-    ["Bio con enlace", pS(iBio)],
-    ["CTA en publicaciones", pS(iCTA)],
-    ["Demo. sensorial", pS(iDemo)],
-    ["Guía Explorando Op.", pS(iGuiaExp)],
-    ["Comparte historia personal", pS(iComparte)],
-    ["Avanza en formación", pS(iAvanza)],
-    ["Enlace en publicaciones", pS(iEnlacePub)],
-    ["Captador de contactos", pS(iCaptador)],
-  ].sort((a,b) => b[1]-a[1]);
-  document.getElementById('bars-individual').innerHTML = pracs.map(([l,v]) => renderBar(l,v)).join('');
+  // PRÁCTICAS
+  const pracsDefs = [
+    ["Materiales listos","materiales"],["Hablé de Just hoy","hable"],["3+ Experiencias/sem","exp3"],
+    ["Experiencia Express","expExpress"],["Publica marca personal","marca"],["Exp. zona de confort","expNuevas"],
+    ["Registra evidencia","registra"],["Bio con enlace","bio"],["CTA en publicaciones","cta"],
+    ["Demo. sensorial","demo"],["Guía Explorando Op.","guiaExp"],["Comparte historia","comparte"],
+    ["Avanza en formación","avanza"],["Enlace en publicaciones","enlacePub"],["Captador de contactos","captador"],
+  ];
+  const lidsDefs = [
+    ["Mide unidades/consultora","mide"],["Reconoce/celebra públic.","reconoce"],["Energía positiva","energia"],
+    ["Detecta bloqueos emoc.","bloqueos"],["Entrena/acompaña equipo","entrena"],["Grupo Aceler. Digital","aceler"],
+    ["Identifica talento líder","talento"],["Meta viajes del equipo","metaEquipo"],["Corrige con CIMAS","corrige"],
+    ["Construye nueva estrategia","construye"],["Acompaña 5-3-2","acompana"],["Seguim. CIMAS equipo","seguimCIMAS"],
+    ["Nuevas guías con equipo","nuevasGuias"],["Cursos 2-3/sem equipo","cursos"],["Comparte casos reales","casos"],
+  ];
 
-  // LIDERAZGO
-  const lids = [
-    ["Mide unidades/consultora", pS(iMide)],
-    ["Reconoce/celebra públicamente", pS(iReconoce)],
-    ["Energía positiva al equipo", pS(iEnergia)],
-    ["Detecta bloqueos emocionales", pS(iBloqueos)],
-    ["Entrena/acompaña equipo", pS(iEntrena)],
-    ["Grupo en Aceler. Digital", pS(iAceler)],
-    ["Identifica talento líder", pS(iTalento)],
-    ["Meta viajes del equipo", pS(iMetaEquipo)],
-    ["Corrige con CIMAS", pS(iCorrige)],
-    ["Construye nueva estrategia", pS(iConstruye)],
-    ["Acompaña 5-3-2 al equipo", pS(iAcompana)],
-    ["Seguim. CIMAS al equipo", pS(iSeguimCIMAS)],
-    ["Nuevas guías con equipo", pS(iNuevasGuias)],
-    ["Cursos 2-3/sem en equipo", pS(iCursos)],
-    ["Comparte casos reales", pS(iCasos)],
-  ].sort((a,b) => b[1]-a[1]);
-  document.getElementById('bars-liderazgo').innerHTML = lids.map(([l,v]) => renderBar(l,v)).join('');
+  function renderBars(containerId, defs, rowsMain, rowsCmp) {
+    const vals = defs.map(([l,k]) => [l, pctSi(rowsMain, im[k]), k]);
+    vals.sort((a,b) => b[1]-a[1]);
+    if (!rowsCmp) {
+      document.getElementById(containerId).innerHTML = vals.map(([l,v]) =>
+        `<div class="bar-row">
+          <span class="bar-row-label">${l}</span>
+          <div class="bar-row-track"><div class="bar-row-fill" data-pct="${v}" style="background:${barColor(v)}"></div></div>
+          <span class="bar-row-pct" style="color:${barColor(v)}">${v}%</span>
+        </div>`).join('');
+    } else {
+      document.getElementById(containerId).innerHTML = vals.map(([l,va,k]) => {
+        const vb = pctSi(rowsCmp, im[k]);
+        return `<div class="bar-row">
+          <span class="bar-row-label">${l}</span>
+          <div class="bar-compare-wrap">
+            <div class="bar-compare-track"><div class="bar-compare-fill" data-pct="${va}" style="background:${GREEN};opacity:.85"></div></div>
+            <div class="bar-compare-track"><div class="bar-compare-fill" data-pct="${vb}" style="background:${ORANGE};opacity:.85"></div></div>
+          </div>
+          <span class="bar-row-pct" style="color:${GREEN};font-size:10.5px">${va}%</span>
+          ${delta(va,vb)}
+        </div>`;
+      }).join('');
+    }
+  }
 
-  // POR DIRECTOR
+  renderBars('bars-individual', pracsDefs, rows, cmpInfo ? rowsB : null);
+  renderBars('bars-liderazgo', lidsDefs, rows, cmpInfo ? rowsB : null);
+
+  // DIRECTOR TABLE
   const dirMap = {};
   rows.forEach(r => {
-    const d = (r[iDirector]||"").toString().trim().replace(/\s*\(.*\)/, '');
+    const d = (r[im.director]||"").toString().trim().replace(/\s*\(.*\)/,'');
     if (!d) return;
     if (!dirMap[d]) dirMap[d] = [];
     dirMap[d].push(r);
   });
   document.getElementById('dir-tbody').innerHTML = Object.entries(dirMap)
-    .sort((a,b) => b[1].length - a[1].length)
-    .map(([d, rs]) => {
-      const nd = rs.length;
-      const desc = pct(rs, iDescargo, "Sí");
-      const rev  = pct(rs, iRevisaJueves, "Sí");
+    .sort((a,b)=>b[1].length-a[1].length)
+    .map(([d,rs]) => {
+      const nd=rs.length, desc=pctSi(rs,im.descargo), rev=pctSi(rs,im.revisaJ);
       return `<tr>
-        <td style="font-weight:500">${d}</td>
-        <td style="color:var(--text-muted)">${nd}</td>
-        <td>
-          <div class="mini-bar-wrap">
-            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${desc}%;background:${barColor(desc)}"></div></div>
-            <span class="mini-bar-pct" style="color:${barColor(desc)}">${desc}%</span>
-          </div>
-        </td>
-        <td>
-          <div class="mini-bar-wrap">
-            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${rev}%;background:${barColor(rev)}"></div></div>
-            <span class="mini-bar-pct" style="color:${barColor(rev)}">${rev}%</span>
-          </div>
-        </td>
+        <td style="font-weight:500">${d}</td><td style="color:var(--text-muted)">${nd}</td>
+        <td><div class="mini-bar-wrap"><div class="mini-bar-track"><div class="mini-bar-fill" style="width:${desc}%;background:${barColor(desc)}"></div></div><span class="mini-bar-pct" style="color:${barColor(desc)}">${desc}%</span></div></td>
+        <td><div class="mini-bar-wrap"><div class="mini-bar-track"><div class="mini-bar-fill" style="width:${rev}%;background:${barColor(rev)}"></div></div><span class="mini-bar-pct" style="color:${barColor(rev)}">${rev}%</span></div></td>
       </tr>`;
     }).join('');
 
-  // CONCLUSIONES (dinámicas basadas en datos)
-  const conclusiones = [
-    {
-      tipo: "critico",
-      titulo: "CIMAS se conoce pero prácticamente no se ejecuta",
-      texto: `${descargo}% descargó la guía, pero solo el ${revisaJ}% revisa su semana los jueves — la brecha más profunda de la región. El ${planifica5}% planifica en 5 etapas, indicando comprensión conceptual, pero el hábito semanal no se instaló. El cuello de botella no es acceso ni comprensión: es rutina.`
-    },
-    {
-      tipo: "critico",
-      titulo: "La duplicación al equipo es prácticamente nula",
-      texto: `Solo el ${pS(iCasos)}% comparte casos reales, el ${pS(iCursos)}% impulsa cursos en el equipo y el ${pS(iNuevasGuias)}% usa las nuevas guías con su gente. La transferencia líder→consultor es el eslabón más débil.`
-    },
-    {
-      tipo: "critico",
-      titulo: "Captador de contactos bajo — hay presencia sin conversión",
-      texto: `Solo el ${pS(iCaptador)}% usa el captador de contactos. El ${pS(iMateriales)}% tiene materiales y el ${pS(iMarca)}% publica marca personal, pero falta el eslabón de conversión. Hay presencia digital sin prospección medible.`
-    },
-    {
-      tipo: "atencion",
-      titulo: "Enfoque personal frágil",
-      texto: `El ${100-siempre}% reconoce estar disperso ("a veces concentrado"). Dado que el líder modela hábitos, la dispersión se replica hacia abajo.`
-    },
-    {
-      tipo: "atencion",
-      titulo: "Meta de viajes no internalizada",
-      texto: `Solo el ${pS(iMeta)}% tiene clara su meta de viajes — una de las palancas motivacionales clave. Sin ancla motivacional clara, la constancia cae.`
-    },
-    {
-      tipo: "atencion",
-      titulo: "Diferencias marcadas entre directores en ejecución CIMAS",
-      texto: `La descarga es alta en todos los equipos, pero la brecha entre descarga y ejecución semanal varía según el Director. La diferencia está en el acompañamiento, no en el acceso al material.`
-    },
-    {
-      tipo: "fortaleza",
-      titulo: "Orientación a prospección sólida",
-      texto: `${prospeccion}% declara que su ingreso depende de prospección vs. ${promociones}% de promociones. Argentina tiene la base conceptual correcta para la nueva estrategia.`
-    },
-    {
-      tipo: "fortaleza",
-      titulo: "Actividad individual de campo sólida",
-      texto: `${pS(iMateriales)}% tiene materiales, ${pS(iHable)}% habló de Just hoy, ${pS(i3exp)}% hace 3+ experiencias por semana. La base de acción está; falta sistematizarla con CIMAS.`
-    },
-  ];
+  // CONCLUSIONES & RECOMENDACIONES (filter mode only)
+  if (!cmpInfo) {
+    const descargo=s('descargo'), revisaJ=s('revisaJ'), planifica5=s('planifica5');
+    const prosp=c('ingreso','prospecc'), prom=c('ingreso','promoci'), siempre=c('enfoque','siempre');
+    const conclusiones = [
+      { tipo:"critico", titulo:"CIMAS se conoce pero prácticamente no se ejecuta",
+        texto:`${descargo}% descargó la guía, pero solo el ${revisaJ}% revisa su semana los jueves. El ${planifica5}% planifica en 5 etapas — hay comprensión conceptual, pero el hábito semanal no se instaló. El cuello de botella no es acceso: es rutina.` },
+      { tipo:"critico", titulo:"La duplicación al equipo es prácticamente nula",
+        texto:`Solo el ${s('casos')}% comparte casos reales, el ${s('cursos')}% impulsa cursos en el equipo y el ${s('nuevasGuias')}% usa las nuevas guías con su gente. La transferencia líder→consultor es el eslabón más débil.` },
+      { tipo:"critico", titulo:"Captador de contactos bajo — presencia sin conversión",
+        texto:`Solo el ${s('captador')}% usa el captador de contactos. El ${s('materiales')}% tiene materiales y el ${s('marca')}% publica en redes, pero falta el eslabón de conversión hacia prospección medible.` },
+      { tipo:"atencion", titulo:"Enfoque personal frágil",
+        texto:`El ${100-siempre}% reconoce estar disperso. Dado que el líder modela hábitos, la dispersión se replica hacia abajo en el equipo.` },
+      { tipo:"atencion", titulo:"Meta de viajes no internalizada",
+        texto:`Solo el ${s('metaViajes')}% tiene clara su meta de viajes. Sin ancla motivacional clara, la constancia cae.` },
+      { tipo:"atencion", titulo:"Diferencias entre directores en ejecución CIMAS",
+        texto:`La descarga es alta en todos los equipos pero la brecha entre descarga y ejecución semanal varía por Director. La diferencia está en el acompañamiento, no en el acceso.` },
+      { tipo:"fortaleza", titulo:"Orientación a prospección sólida",
+        texto:`${prosp}% declara que su ingreso depende de prospección vs. ${prom}% de promociones. ${PAIS_DISPLAY} tiene la base conceptual correcta para la nueva estrategia.` },
+      { tipo:"fortaleza", titulo:"Actividad individual de campo sólida",
+        texto:`${s('materiales')}% tiene materiales, ${s('hable')}% habló de Just hoy, ${s('exp3')}% hace 3+ experiencias por semana. La base de acción está; falta sistematizarla con CIMAS.` },
+    ];
+    const tagLabel = { critico:"Crítico", atencion:"Atención", fortaleza:"Fortaleza" };
+    document.getElementById('conclusiones').innerHTML = conclusiones.map(c =>
+      `<div class="conclusion-item ${c.tipo}">
+        <span class="conclusion-badge">${tagLabel[c.tipo]}</span>
+        <div><div class="conclusion-title">${c.titulo}</div><div class="conclusion-text">${c.texto}</div></div>
+      </div>`).join('');
 
-  const tagLabel = { critico: "Crítico", atencion: "Atención", fortaleza: "Fortaleza" };
-  document.getElementById('conclusiones').innerHTML = conclusiones.map(c => `
-    <div class="conclusion-item ${c.tipo}">
-      <span class="conclusion-badge">${tagLabel[c.tipo]}</span>
-      <div class="conclusion-body">
-        <div class="conclusion-title">${c.titulo}</div>
-        <div class="conclusion-text">${c.texto}</div>
+    const recs = [
+      { titulo:"Ritual del jueves CIMAS — urgente",
+        texto:`La brecha ${descargo}%→${revisaJ}% es la #1. Convertir la revisión/planificación semanal en evento fijo verificado por el Director.` },
+      { titulo:"Acompañamiento diferenciado por Director",
+        texto:"Identificar qué Director tiene mejor ejecución, documentar sus prácticas y replicarlas. La descarga alta indica que el material llegó; falta el seguimiento." },
+      { titulo:"Campaña de duplicación de equipo",
+        texto:`Metas concretas: casos reales (hoy ${s('casos')}%) y guías compartidas (${s('nuevasGuias')}%) a estándares mínimos. Usar data de unidades por consultora para coaching.` },
+      { titulo:"Kit de conversión digital",
+        texto:`El captador de contactos (${s('captador')}%) es la práctica más rezagada y de mayor retorno. Junto con registrar evidencia cierra el gap presencia→prospección medible.` },
+      { titulo:"Ancla motivacional: metas de viaje",
+        texto:`Solo el ${s('metaViajes')}% tiene clara su meta. Activar este motor en cada revisión: el ${s('foco')}% mantiene foco en CIMAS/guías, lo que indica disposición de base.` },
+      { titulo:"Aprovechar la base de campo existente",
+        texto:`${PAIS_DISPLAY} tiene actividad individual sólida (${s('materiales')}% materiales, ${s('exp3')}% experiencias). El foco no es motivar la acción: es sistematizarla con CIMAS.` },
+    ];
+    document.getElementById('recomendaciones').innerHTML = recs.map((r,i) =>
+      `<div class="rec-item"><span class="rec-num">${i+1}</span><div><div class="rec-title">${r.titulo}</div><div class="rec-text">${r.texto}</div></div></div>`).join('');
+  } else {
+    // Compare mode: show improvement summary instead
+    const sB = k => pctSi(rowsB, im[k]);
+    const allKeys = [...pracsDefs, ...lidsDefs].map(([l,k])=>({l,k}));
+    const mejoras = allKeys.map(({l,k})=>({l, da:s(k), db:sB(k), diff:sB(k)-s(k)})).sort((a,b)=>b.diff-a.diff);
+    const top3Mejor = mejoras.slice(0,3).filter(x=>x.diff>0);
+    const top3Peor  = [...mejoras].reverse().slice(0,3).filter(x=>x.diff<0);
+
+    document.getElementById('conclusiones').innerHTML = `
+      <div class="conclusion-item fortaleza">
+        <span class="conclusion-badge">Mejoras</span>
+        <div><div class="conclusion-title">Mayor mejora de ${cmpInfo.a} → ${cmpInfo.b}</div>
+        <div class="conclusion-text">${top3Mejor.length ? top3Mejor.map(x=>`<strong>${x.l}</strong>: ${x.da}% → ${x.db}% (↑${x.diff}pp)`).join(' · ') : 'Sin mejoras registradas'}</div></div>
       </div>
-    </div>`).join('');
-
-  // RECOMENDACIONES
-  const recs = [
-    {
-      titulo: "Ritual del jueves CIMAS — urgente",
-      texto: `La brecha ${descargo}%→${revisaJ}% es la #1 de Argentina. Convertir la revisión/planificación semanal en evento fijo verificado por el Director. Sin este hábito el resto del sistema no funciona.`
-    },
-    {
-      titulo: "Acompañamiento diferenciado por Director",
-      texto: "Identificar qué Director tiene mejor ejecución y documentar sus prácticas para replicarlas. La descarga alta indica que el material llegó; falta el seguimiento del Director."
-    },
-    {
-      titulo: "Campaña de duplicación de equipo",
-      texto: `Metas concretas: llevar casos reales (hoy ${pS(iCasos)}%) y guías compartidas (${pS(iNuevasGuias)}%) a estándares mínimos. Usar la data de unidades por consultora para conversaciones de coaching.`
-    },
-    {
-      titulo: "Kit de conversión digital",
-      texto: `El captador de contactos (${pS(iCaptador)}%) es la práctica más rezagada y de mayor retorno. Convertirlo en hábito diario cierra el gap presencia→prospección medible.`
-    },
-    {
-      titulo: "Ancla motivacional: metas de viaje",
-      texto: `Solo el ${pS(iMeta)}% tiene clara su meta. Activar este motor en cada revisión de Director: el ${pS(iFoco)}% mantiene foco en CIMAS/guías 90 días, lo que indica disposición de base.`
-    },
-    {
-      titulo: "Aprovechar la base de campo existente",
-      texto: `Argentina tiene una de las bases individuales más sólidas (${pS(iMateriales)}% materiales, ${pS(i3exp)}% experiencias). El foco no es motivar la acción — es sistematizarla con CIMAS y replicarla hacia abajo.`
-    },
-  ];
-
-  document.getElementById('recomendaciones').innerHTML = recs.map((r, i) => `
-    <div class="rec-item">
-      <span class="rec-num">${i+1}</span>
-      <div>
-        <div class="rec-title">${r.titulo}</div>
-        <div class="rec-text">${r.texto}</div>
-      </div>
-    </div>`).join('');
+      <div class="conclusion-item critico">
+        <span class="conclusion-badge">Retrocesos</span>
+        <div><div class="conclusion-title">Mayor retroceso de ${cmpInfo.a} → ${cmpInfo.b}</div>
+        <div class="conclusion-text">${top3Peor.length ? top3Peor.map(x=>`<strong>${x.l}</strong>: ${x.da}% → ${x.db}% (↓${Math.abs(x.diff)}pp)`).join(' · ') : 'Sin retrocesos registrados'}</div></div>
+      </div>`;
+    document.getElementById('recomendaciones').innerHTML =
+      `<div class="rec-item"><span class="rec-num">→</span><div><div class="rec-title">Cambiá a modo "Filtrar" para ver recomendaciones por revisión individual</div></div></div>`;
+  }
 
   animateBars();
+}
+
+// ── DONUTS ───────────────────────────────────────────────────────────────────
+function renderDonut(id, labels, values, colors, legendId) {
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  ctx.parentElement.style.display = 'block';
+  if (id==='chartEnfoque' && chartEnfoque) { chartEnfoque.destroy(); chartEnfoque=null; }
+  if (id==='chartIngreso' && chartIngreso) { chartIngreso.destroy(); chartIngreso=null; }
+  const ch = new Chart(ctx, {
+    type:'doughnut', data:{ labels, datasets:[{ data:values, backgroundColor:colors, borderWidth:2, borderColor:'#fff', hoverOffset:4 }] },
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'65%', plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:c=>` ${c.label}: ${c.parsed}%` } } } }
+  });
+  if (id==='chartEnfoque') chartEnfoque=ch;
+  if (id==='chartIngreso') chartIngreso=ch;
+  const el = document.getElementById(legendId);
+  if (el) el.innerHTML = labels.map((l,i)=>
+    `<span class="donut-legend-item"><span class="donut-swatch" style="background:${colors[i]}"></span>${l} ${values[i]}%</span>`).join('');
+}
+
+function animateBars() {
+  document.querySelectorAll('[data-pct]').forEach(el => {
+    const v = el.dataset.pct;
+    el.style.width = '0';
+    setTimeout(()=>{ el.style.width = v+'%'; }, 80);
+  });
+}
+
+// ── LOAD ─────────────────────────────────────────────────────────────────────
+async function loadData() {
+  try {
+    const res = await fetch(`${ENDPOINT}?action=pais&pais=${encodeURIComponent(PAIS)}`);
+    const json = await res.json();
+    headers = json.headers.map(h=>h.toString().trim());
+    allRows = json.rows;
+    iMap = buildIndexMap(headers);
+
+    // Get unique revisions sorted
+    revisions = [...new Set(allRows.map(r=>(r[iMap.revision]||"").toString().trim()))]
+      .filter(Boolean)
+      .sort((a,b) => {
+        const na = parseInt(a.replace(/\D/g,'')), nb = parseInt(b.replace(/\D/g,''));
+        return na-nb;
+      });
+
+    // Build filter buttons
+    const filterDiv = document.getElementById('filter-mode');
+    filterDiv.innerHTML = ['all', ...revisions].map(r =>
+      `<button class="rev-btn${r==='all'?' active':''}" data-rev="${r}" onclick="filterByRevision('${r}')">${r==='all'?'Todas':r}</button>`
+    ).join('');
+
+    // Build compare selects
+    ['cmp-a','cmp-b'].forEach((id,idx) => {
+      const sel = document.getElementById(id);
+      sel.innerHTML = revisions.map(r=>`<option value="${r}">${r}</option>`).join('');
+      sel.selectedIndex = idx < revisions.length ? idx : 0;
+    });
+
+    // Show UI
+    document.getElementById('hero-loading').style.display = 'none';
+    document.getElementById('hero-sub').textContent = `Plan de 90 días · CIMAS, nuevas guías y Estrategia SwissJust · ${allRows.length} respuestas`;
+    document.getElementById('hero-brecha').style.display = 'inline-block';
+    document.getElementById('kpi-strip').style.display = 'grid';
+    document.getElementById('rev-controls').style.display = 'flex';
+    document.getElementById('main-content').style.display = 'block';
+
+    filterByRevision('all');
+  } catch(e) {
+    document.getElementById('hero-loading').innerHTML =
+      '<span style="color:rgba(255,255,255,0.8)">Error al cargar datos. Verificá la conexión e intentá de nuevo.</span>';
+  }
 }
 
 loadData();
