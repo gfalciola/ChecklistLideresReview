@@ -569,7 +569,7 @@ function extractMetrics(rows, h) {
     planificaJ:  s("Planificas tu semana siguiente cada jueves"),
     revisaJ:     s("Revisas y analizas tu semana anterior cada jueves"),
     seguimCIMAS: s("seguimiento a cada consultor de tu grupo utilizando la metodología CIMAS"),
-    enfoquePleno:c("nivel de enfoque","siempre") ?? c("estás concentrado","siempre") ?? c("enfoque","siempre"),
+    enfoquePleno:c("nivel de enfoque","Siempre estoy concentrado") ?? c("nivel de enfoque","siempre") ?? c("estás concentrado","siempre"),
     prospeccion: c("ingreso depende principalmente","prospecc"),
     promociones: c("ingreso depende principalmente","promoci"),
     materiales:  s("materiales necesarios"),
@@ -662,7 +662,7 @@ function renderRegional(dataA, dataB, cmpInfo) {
   // KPIs
   const totalN = metricsA.reduce((s,m)=>s+m.n,0);
   document.getElementById('kpi-total').textContent    = totalN.toLocaleString();
-  document.getElementById('kpi-paises').textContent   = dataA.filter(d=>d.rows.length>0).length;
+  document.getElementById('kpi-paises').textContent   = dataA.filter(d=>d.rows.length>0).length || PAISES.length;
   document.getElementById('kpi-descargo').textContent = (wavg(metricsA,'descargo')??'—') + (wavg(metricsA,'descargo')!==null?'%':'');
   document.getElementById('kpi-revisa').textContent   = (wavg(metricsA,'revisaJ')??'—')  + (wavg(metricsA,'revisaJ')!==null?'%':'');
   document.getElementById('kpi-enfoque').textContent  = (wavg(metricsA,'enfoquePleno')??'—') + (wavg(metricsA,'enfoquePleno')!==null?'%':'');
