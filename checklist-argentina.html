@@ -327,9 +327,18 @@ function buildIndexMap(h) {
 function setMode(mode) {
   currentMode = mode;
   document.querySelectorAll('.rev-mode-tab').forEach((t,i)=>t.classList.toggle('active', (i===0&&mode==='filter')||(i===1&&mode==='compare')));
-  document.getElementById('filter-mode').style.display = mode==='filter' ? 'flex' : 'none';
-  document.getElementById('compare-mode').style.display = mode==='compare' ? 'flex' : 'none';
-  if (mode==='filter') filterByRevision(document.querySelector('.rev-btn.active')?.dataset.rev || 'all');
+  document.getElementById('filter-mode').style.display   = mode==='filter'  ? 'flex' : 'none';
+  document.getElementById('compare-mode').style.display  = mode==='compare' ? 'flex' : 'none';
+  if (mode==='filter') {
+    filterByRevision(document.querySelector('.rev-btn.active')?.dataset.rev || 'all');
+  } else {
+    // Reset KPIs and UI to "Todas" state when entering compare mode
+    renderSingle(allRows, null, null);
+    document.getElementById('rev-n-badge').textContent = '';
+    document.getElementById('rev-warning').textContent = '';
+    document.getElementById('participation-section').style.display = 'none';
+    document.getElementById('weight-banner-wrap').style.display = 'none';
+  }
 }
 
 // ── FILTER ───────────────────────────────────────────────────────────────────
@@ -431,10 +440,19 @@ function renderSingle(rows, rowsB, cmpInfo) {
     renderDonut('chartEnfoque', ['Siempre','A veces'], [siempre, 100-siempre], [GREEN, GRAY], 'legend-enfoque');
     renderDonut('chartIngreso', ['Prospección','Promociones','Mixto'], [prosp, prom, Math.max(0,100-prosp-prom)], [GREEN,RED,BLUE], 'legend-ingreso');
   } else {
-    document.getElementById('chartEnfoque').parentElement.style.display = 'none';
-    document.getElementById('legend-enfoque').innerHTML = '';
-    document.getElementById('chartIngreso').parentElement.style.display = 'none';
-    document.getElementById('legend-ingreso').innerHTML = '';
+    // Show donuts for revision A in compare mode
+    const sieA  = c('enfoque','siempre'), prospA = c('ingreso','prospecc'), promA = c('ingreso','promoci');
+    const sieB  = pctC(rowsB, im['enfoque'],  'siempre');
+    const prospB = pctC(rowsB, im['ingreso'], 'prospecc');
+    const promB  = pctC(rowsB, im['ingreso'], 'promoci');
+    renderDonut('chartEnfoque',
+      [`Siempre (${cmpInfo.a})`, `Siempre (${cmpInfo.b})`, 'A veces'],
+      [sieA, sieB, Math.max(0, 100 - sieA - sieB)],
+      [GREEN, ORANGE, GRAY], 'legend-enfoque');
+    renderDonut('chartIngreso',
+      [`Prosp. (${cmpInfo.a})`, `Prosp. (${cmpInfo.b})`, 'Prom./otro'],
+      [prospA, prospB, Math.max(0, 100 - prospA - prospB)],
+      [GREEN, ORANGE, BLUE], 'legend-ingreso');
   }
 
   // PRÁCTICAS
