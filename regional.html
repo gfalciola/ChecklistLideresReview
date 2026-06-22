@@ -592,6 +592,13 @@ function extractMetrics(rows, h) {
     foco:        s("manteniendo el foco"),
     entrena:     s("entrenando y acompañando"),
     energia:     s("transmitiendo energía positiva"),
+    cumple532:   s("están cumpliendo el objetivo semanal de 5"),
+    esperaProm_inv: (() => {
+      const iep = idxH(h, "Estás esperando las promociones como principal motor");
+      if (!rows.length || iep < 0) return null;
+      const noCount = rows.filter(r => (r[iep]||"").toString().trim().toLowerCase() === "no").length;
+      return Math.round(noCount/rows.length*100);
+    })(),
   };
 }
 
