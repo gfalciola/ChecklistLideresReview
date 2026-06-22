@@ -130,14 +130,7 @@ body { font-family:'Inter',sans-serif; background:var(--gray-bg); color:var(--te
 .rec-text { font-size:12.5px; color:var(--text-muted); line-height:1.5; }
 
 /* DIR TABLE */
-.dir-table { width:100%; border-collapse:collapse; }
-.dir-table th { font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); padding:8px 10px; text-align:left; border-bottom:1px solid var(--gray-border); font-weight:500; }
-.dir-table td { padding:10px; font-size:13px; border-bottom:1px solid var(--gray-border); vertical-align:middle; }
-.dir-table tr:last-child td { border-bottom:none; }
-.mini-bar-wrap { display:flex; align-items:center; gap:8px; }
-.mini-bar-track { flex:1; height:8px; background:#F0EEE8; border-radius:2px; overflow:hidden; }
-.mini-bar-fill { height:100%; border-radius:2px; }
-.mini-bar-pct { font-size:12px; font-weight:600; width:36px; }
+
 
 /* DONUTS */
 .donut-legend { display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
@@ -164,7 +157,6 @@ body { font-family:'Inter',sans-serif; background:var(--gray-bg); color:var(--te
 
 <div class="kpi-strip" id="kpi-strip" style="display:none">
   <div class="kpi-cell red"><div class="kpi-val" id="kpi-n">—</div><div class="kpi-label">Respuestas</div></div>
-  <div class="kpi-cell"><div class="kpi-val" id="kpi-dir">—</div><div class="kpi-label">Directores</div></div>
   <div class="kpi-cell green"><div class="kpi-val" id="kpi-descargo">—</div><div class="kpi-label">Descargó guía CIMAS</div></div>
   <div class="kpi-cell orange"><div class="kpi-val" id="kpi-revisa">—</div><div class="kpi-label">Revisa jueves CIMAS</div></div>
   <div class="kpi-cell"><div class="kpi-val" id="kpi-enfoque">—</div><div class="kpi-label">Enfoque pleno</div></div>
@@ -221,15 +213,7 @@ body { font-family:'Inter',sans-serif; background:var(--gray-bg); color:var(--te
     <div class="section-title">Liderazgo de equipo y duplicación</div>
     <div class="chart-card"><div class="bar-list" id="bars-liderazgo"></div></div>
   </div>
-  <div class="section">
-    <div class="section-title">CIMAS por director</div>
-    <div class="chart-card">
-      <table class="dir-table">
-        <thead><tr><th>Director</th><th>N</th><th>Descargó CIMAS</th><th>Revisa jueves</th></tr></thead>
-        <tbody id="dir-tbody"></tbody>
-      </table>
-    </div>
-  </div>
+
   <div class="section">
     <div class="section-title">Conclusiones estratégicas</div>
     <div class="conclusion-list" id="conclusiones"></div>
@@ -364,8 +348,6 @@ function renderSingle(rows, rowsB, cmpInfo) {
   // KPIs (only update in filter mode)
   if (!cmpInfo) {
     document.getElementById('kpi-n').textContent = n;
-    const dirs = [...new Set(rows.map(r=>(r[im.director]||"").toString().trim()))].filter(Boolean);
-    document.getElementById('kpi-dir').textContent = dirs.length;
     document.getElementById('kpi-descargo').textContent = s('descargo')+'%';
     document.getElementById('kpi-revisa').textContent   = s('revisaJ')+'%';
     document.getElementById('kpi-enfoque').textContent  = c('enfoque','siempre')+'%';
@@ -480,24 +462,6 @@ function renderSingle(rows, rowsB, cmpInfo) {
   renderBars('bars-individual', pracsDefs, rows, cmpInfo ? rowsB : null);
   renderBars('bars-liderazgo', lidsDefs, rows, cmpInfo ? rowsB : null);
 
-  // DIRECTOR TABLE
-  const dirMap = {};
-  rows.forEach(r => {
-    const d = (r[im.director]||"").toString().trim().replace(/\s*\(.*\)/,'');
-    if (!d) return;
-    if (!dirMap[d]) dirMap[d] = [];
-    dirMap[d].push(r);
-  });
-  document.getElementById('dir-tbody').innerHTML = Object.entries(dirMap)
-    .sort((a,b)=>b[1].length-a[1].length)
-    .map(([d,rs]) => {
-      const nd=rs.length, desc=pctSi(rs,im.descargo), rev=pctSi(rs,im.revisaJ);
-      return `<tr>
-        <td style="font-weight:500">${d}</td><td style="color:var(--text-muted)">${nd}</td>
-        <td><div class="mini-bar-wrap"><div class="mini-bar-track"><div class="mini-bar-fill" style="width:${desc}%;background:${barColor(desc)}"></div></div><span class="mini-bar-pct" style="color:${barColor(desc)}">${desc}%</span></div></td>
-        <td><div class="mini-bar-wrap"><div class="mini-bar-track"><div class="mini-bar-fill" style="width:${rev}%;background:${barColor(rev)}"></div></div><span class="mini-bar-pct" style="color:${barColor(rev)}">${rev}%</span></div></td>
-      </tr>`;
-    }).join('');
 
   // CONCLUSIONES & RECOMENDACIONES (filter mode only)
   if (!cmpInfo) {
@@ -514,8 +478,6 @@ function renderSingle(rows, rowsB, cmpInfo) {
         texto:`El ${100-siempre}% reconoce estar disperso. Dado que el líder modela hábitos, la dispersión se replica hacia abajo en el equipo.` },
       { tipo:"atencion", titulo:"Meta de viajes no internalizada",
         texto:`Solo el ${s('metaViajes')}% tiene clara su meta de viajes. Sin ancla motivacional clara, la constancia cae.` },
-      { tipo:"atencion", titulo:"Diferencias entre directores en ejecución CIMAS",
-        texto:`La descarga es alta en todos los equipos pero la brecha entre descarga y ejecución semanal varía por Director. La diferencia está en el acompañamiento, no en el acceso.` },
       { tipo:"fortaleza", titulo:"Orientación a prospección sólida",
         texto:`${prosp}% declara que su ingreso depende de prospección vs. ${prom}% de promociones. ${PAIS_DISPLAY} tiene la base conceptual correcta para la nueva estrategia.` },
       { tipo:"fortaleza", titulo:"Actividad individual de campo sólida",
@@ -530,9 +492,7 @@ function renderSingle(rows, rowsB, cmpInfo) {
 
     const recs = [
       { titulo:"Ritual del jueves CIMAS — urgente",
-        texto:`La brecha ${descargo}%→${revisaJ}% es la #1. Convertir la revisión/planificación semanal en evento fijo verificado por el Director.` },
-      { titulo:"Acompañamiento diferenciado por Director",
-        texto:"Identificar qué Director tiene mejor ejecución, documentar sus prácticas y replicarlas. La descarga alta indica que el material llegó; falta el seguimiento." },
+        texto:`La brecha ${descargo}%→${revisaJ}% es la #1. Convertir la revisión/planificación semanal en evento fijo.` },
       { titulo:"Campaña de duplicación de equipo",
         texto:`Metas concretas: casos reales (hoy ${s('casos')}%) y guías compartidas (${s('nuevasGuias')}%) a estándares mínimos. Usar data de unidades por consultora para coaching.` },
       { titulo:"Kit de conversión digital",
