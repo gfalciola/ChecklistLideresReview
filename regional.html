@@ -587,7 +587,7 @@ function extractMetrics(rows, h) {
     casos:       s("Compartes casos reales"),
     corrige:     s("metodología CIMAS para corregir"),
     cursos:      s("consultores realizan entre 2 y 3 cursos"),
-    aceler:      s("Programa de Aceleración Digital"),
+    aceler:      s("Todo tu grupo está participando en el Programa de Aceleración Digital"),
     mide:        s("midiendo el crecimiento de unidades"),
     foco:        s("manteniendo el foco"),
     entrena:     s("entrenando y acompañando"),
@@ -705,6 +705,7 @@ function renderRegional(dataA, dataB, cmpInfo) {
     ["Registra evidencia","registra"],["Bio con enlace","bio"],["CTA en publicaciones","cta"],
     ["Demo. sensorial","demo"],["Guía Explorando Op.","guiaExp"],["Comparte historia","comparte"],
     ["Avanza en formación","avanza"],["Enlace en publicaciones","enlacePub"],["Captador de contactos","captador"],
+    ["No depende de promociones ★","esperaProm_inv"],
   ];
   const lidDefs = [
     ["Mide unidades/consultora","mide"],["Reconoce/celebra público","reconoce"],["Energía positiva","energia"],
@@ -712,6 +713,7 @@ function renderRegional(dataA, dataB, cmpInfo) {
     ["Identifica talento líder","talento"],["Meta viajes del equipo","metaEquipo"],["Corrige con CIMAS","corrige"],
     ["Construye nueva estrategia","construye"],["Acompaña 5-3-2","acompana"],["Seguim. CIMAS equipo","seguimCIMAS"],
     ["Nuevas guías con equipo","nuevasGuias"],["Cursos 2-3/sem equipo","cursos"],["Comparte casos reales","casos"],
+    ["Equipo cumple 5-3-2","cumple532"],
   ];
 
   function buildHeatmap(headId, bodyId, titleId, titleText, defs) {

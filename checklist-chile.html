@@ -315,11 +315,13 @@ function buildIndexMap(h) {
     casos:        find("Compartes casos reales"),
     corrige:      find("metodología CIMAS para corregir"),
     cursos:       find("consultores realizan entre 2 y 3 cursos"),
-    aceler:       find("Programa de Aceleración Digital"),
+    aceler:       find("Todo tu grupo está participando en el Programa de Aceleración Digital"),
     mide:         find("midiendo el crecimiento de unidades"),
     foco:         find("manteniendo el foco"),
     entrena:      find("entrenando y acompañando"),
     energia:      find("transmitiendo energía positiva"),
+    cumple532:    find("están cumpliendo el objetivo semanal de 5"),
+    esperaProm:   find("Estás esperando las promociones como principal motor"),
   };
 }
 
@@ -462,6 +464,7 @@ function renderSingle(rows, rowsB, cmpInfo) {
     ["Registra evidencia","registra"],["Bio con enlace","bio"],["CTA en publicaciones","cta"],
     ["Demo. sensorial","demo"],["Guía Explorando Op.","guiaExp"],["Comparte historia","comparte"],
     ["Avanza en formación","avanza"],["Enlace en publicaciones","enlacePub"],["Captador de contactos","captador"],
+    ["No depende de promociones ★","esperaProm_inv"],
   ];
   const lidsDefs = [
     ["Mide unidades/consultora","mide"],["Reconoce/celebra públic.","reconoce"],["Energía positiva","energia"],
@@ -469,10 +472,20 @@ function renderSingle(rows, rowsB, cmpInfo) {
     ["Identifica talento líder","talento"],["Meta viajes del equipo","metaEquipo"],["Corrige con CIMAS","corrige"],
     ["Construye nueva estrategia","construye"],["Acompaña 5-3-2","acompana"],["Seguim. CIMAS equipo","seguimCIMAS"],
     ["Nuevas guías con equipo","nuevasGuias"],["Cursos 2-3/sem equipo","cursos"],["Comparte casos reales","casos"],
+    ["Equipo cumple 5-3-2","cumple532"],
   ];
 
   function renderBars(containerId, defs, rowsMain, rowsCmp) {
-    const vals = defs.map(([l,k]) => [l, pctSi(rowsMain, im[k]), k]);
+    const vals = defs.map(([l,k]) => {
+      if (k === 'esperaProm_inv') {
+        // Inverted: % that answered "No" (not waiting for promotions) = good
+        const i = im['esperaProm'];
+        if (!rowsMain.length || i < 0) return [l, 0, k];
+        const noCount = rowsMain.filter(r => (r[i]||"").toString().trim().toLowerCase() === "no").length;
+        return [l, Math.round(noCount/rowsMain.length*100), k];
+      }
+      return [l, pctSi(rowsMain, im[k]), k];
+    });
     vals.sort((a,b) => b[1]-a[1]);
     if (!rowsCmp) {
       document.getElementById(containerId).innerHTML = vals.map(([l,v]) =>
@@ -483,7 +496,14 @@ function renderSingle(rows, rowsB, cmpInfo) {
         </div>`).join('');
     } else {
       document.getElementById(containerId).innerHTML = vals.map(([l,va,k]) => {
-        const vb = pctSi(rowsCmp, im[k]);
+        let vb;
+        if (k === 'esperaProm_inv') {
+          const i = im['esperaProm'];
+          const noCount = rowsCmp.filter(r => (r[i]||"").toString().trim().toLowerCase() === "no").length;
+          vb = rowsCmp.length ? Math.round(noCount/rowsCmp.length*100) : 0;
+        } else {
+          vb = pctSi(rowsCmp, im[k]);
+        }
         return `<div class="bar-row">
           <span class="bar-row-label">${l}</span>
           <div class="bar-compare-wrap">
