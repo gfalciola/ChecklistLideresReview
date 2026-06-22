@@ -634,18 +634,18 @@ function renderParticipacion() {
   } else {
     section.style.display = 'none';
     const n = revCounts[activeRev] || 0;
-    const avgN = allRows.length / revisions.length;
-    const ratio = n / avgN;
+    const baseN = revCounts[revisions[0]] || 1; // Rev 1 as baseline
+    const ratio = n / baseN;
     let level, icon, msg;
-    if (ratio >= 0.7) {
+    if (ratio >= 0.75) {
       level = 'high'; icon = '●';
-      msg = `Peso estadístico <strong>alto</strong> — <span class="weight-n">${n} respuestas</span> en esta revisión (promedio: ${Math.round(avgN)} por revisión). Los porcentajes son representativos.`;
-    } else if (ratio >= 0.25) {
+      msg = `Peso estadístico <strong>alto</strong> — <span class="weight-n">${n} respuestas</span> (${Math.round(ratio*100)}% de la Revisión 1 con ${baseN}). Los porcentajes son representativos.`;
+    } else if (ratio >= 0.50) {
       level = 'medium'; icon = '◑';
-      msg = `Peso estadístico <strong>medio</strong> — <span class="weight-n">${n} respuestas</span> en esta revisión vs. promedio de ${Math.round(avgN)}. Interpretar tendencias con precaución.`;
+      msg = `Peso estadístico <strong>medio</strong> — <span class="weight-n">${n} respuestas</span> (${Math.round(ratio*100)}% de la Revisión 1 con ${baseN}). Interpretar tendencias con precaución.`;
     } else {
       level = 'low'; icon = '○';
-      msg = `Peso estadístico <strong>bajo</strong> — solo <span class="weight-n">${n} respuestas</span> en esta revisión vs. promedio de ${Math.round(avgN)}. Los porcentajes son poco representativos.`;
+      msg = `Peso estadístico <strong>bajo</strong> — solo <span class="weight-n">${n} respuestas</span> (${Math.round(ratio*100)}% de la Revisión 1 con ${baseN}). Los porcentajes son poco representativos.`;
     }
     bannerWrap.style.display = 'block';
     bannerWrap.innerHTML = `<div class="weight-banner ${level}"><span class="weight-icon">${icon}</span><span>${msg}</span></div>`;

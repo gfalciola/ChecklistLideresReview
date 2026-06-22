@@ -333,50 +333,22 @@ body {
 }
 
 /* RANKING TABLE */
-.ranking-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-}
-.ranking-table { width: 100%; border-collapse: collapse; }
-.ranking-table th {
-  font-size: 10.5px;
-  font-weight: 500;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 10px 14px;
-  text-align: left;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg3);
-}
-.ranking-table td {
-  padding: 11px 14px;
-  border-bottom: 1px solid var(--border);
-  font-size: 13px;
-  vertical-align: middle;
-}
-.ranking-table tr:last-child td { border-bottom: none; }
-.rank-num {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text-muted);
-  width: 30px;
-}
-.rank-bar-wrap { display: flex; align-items: center; gap: 8px; }
-.rank-bar-track {
-  flex: 1;
-  height: 6px;
-  background: #F0EEE8;
-  border-radius: 3px;
-  overflow: hidden;
-  min-width: 80px;
-}
-.rank-bar-fill { height: 100%; border-radius: 3px; }
-.rank-pct { font-size: 12px; font-weight: 600; width: 38px; text-align: right; }
+
 
 /* FOOTER */
+
+/* PARTICIPATION */
+.participation-card { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:1.25rem; margin-bottom:1.5rem; }
+.participation-title { font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:1rem; }
+/* WEIGHT INDICATORS */
+.weight-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:8px; margin-bottom:1.5rem; }
+.weight-chip { padding:8px 12px; border-radius:8px; font-size:11.5px; line-height:1.4; }
+.weight-chip.high   { background:rgba(29,158,117,0.1); border:1px solid rgba(29,158,117,0.3); color:#0A5A3A; }
+.weight-chip.medium { background:rgba(186,117,23,0.1); border:1px solid rgba(186,117,23,0.3); color:#7A4A0A; }
+.weight-chip.low    { background:rgba(192,57,43,0.08); border:1px solid rgba(192,57,43,0.25); color:#7A1A0A; }
+.weight-chip-country { font-weight:600; }
+.weight-chip-detail { color:inherit; opacity:0.75; font-size:10.5px; }
+
 .footer {
   text-align: center;
   padding: 2rem;
@@ -463,6 +435,22 @@ body {
 
 <!-- MAIN -->
 <div class="container" id="main-content" style="display:none">
+  <!-- PARTICIPATION CHART (shown in Todas mode) -->
+  <div id="participation-section" style="display:none">
+    <div class="section">
+      <div class="participation-card">
+        <div class="participation-title">Participación por país y revisión</div>
+        <div style="position:relative;height:200px;"><canvas id="chartParticipacion"></canvas></div>
+      </div>
+    </div>
+  </div>
+  <!-- WEIGHT INDICATORS (shown in single-revision mode) -->
+  <div id="weight-grid-wrap" style="display:none">
+    <div class="section">
+      <div class="section-header"><span class="section-title" id="weight-grid-title">Peso estadístico por país</span></div>
+      <div class="weight-grid" id="weight-grid"></div>
+    </div>
+  </div>
   <div class="section">
     <div class="section-header"><span class="section-title">Embudo CIMAS por país</span></div>
     <div class="embudo-grid">
@@ -478,32 +466,7 @@ body {
       </table>
     </div>
   </div>
-  <div class="section">
-    <div class="section-header"><span class="section-title" id="ranking-title">Ranking de implementación CIMAS (revisa jueves)</span></div>
-    <div class="ranking-card">
-      <table class="ranking-table">
-        <thead><tr><th style="width:40px">#</th><th>País</th><th>Respuestas</th><th style="min-width:200px">% Revisa jueves</th></tr></thead>
-        <tbody id="ranking-tbody"></tbody>
-      </table>
-    </div>
-  </div>
-  <div class="section">
-    <div class="heatmap-wrap">
-      <div class="heatmap-title" id="heatmap-ind-title">Prácticas individuales del líder — comparativa regional</div>
-      <table class="heatmap-table"><thead id="heatmap-ind-head"></thead><tbody id="heatmap-ind-body"></tbody></table>
-    </div>
-  </div>
-  <div class="section">
-    <div class="heatmap-wrap">
-      <div class="heatmap-title" id="heatmap-lid-title">Liderazgo de equipo y duplicación — comparativa regional</div>
-      <table class="heatmap-table"><thead id="heatmap-lid-head"></thead><tbody id="heatmap-lid-body"></tbody></table>
-    </div>
-  </div>
-  <div class="section">
-    <div class="section-header"><span class="section-title">Action items regionales — brechas más críticas</span></div>
-    <div class="action-grid" id="action-grid"></div>
-  </div>
-</div>
+
 
 <div class="footer">
   Vista Regional · Just América · Checklist Líderes · Junio 2026<br>
@@ -525,7 +488,9 @@ const PAISES = [
 
 let rawData = [];   // full data per country, never filtered
 let revisions = []; // all revision values found
+let revCountsByPais = {}; // {pais: {rev: n}}
 let currentMode = 'filter';
+let chartParticipacion = null;
 
 const RED="#C0392B", GREEN="#1D9E75", ORANGE="#BA7517";
 
@@ -633,6 +598,7 @@ function filterByRevision(rev) {
   document.getElementById('rev-n-badge').textContent = `n = ${totalN.toLocaleString()}`;
   document.getElementById('rev-warning').textContent = '';
   renderRegional(filtered, null, null);
+  renderParticipacionRegional(rev);
 }
 
 // ── COMPARE MODE ──────────────────────────────────────────────────────────────
@@ -646,6 +612,8 @@ function runCompare() {
   document.getElementById('rev-n-badge').textContent = `n = ${totalN.toLocaleString()}`;
   document.getElementById('rev-warning').textContent = '';
   renderRegional(filteredA, filteredB, {a, b});
+  document.getElementById('participation-section').style.display = 'none';
+  document.getElementById('weight-grid-wrap').style.display = 'none';
 }
 
 // ── RENDER ────────────────────────────────────────────────────────────────────
@@ -705,48 +673,6 @@ function renderRegional(dataA, dataB, cmpInfo) {
     }).join('');
   }
 
-  // ── RANKING
-  document.getElementById('ranking-title').textContent = cmpInfo
-    ? `Ranking CIMAS — ${cmpInfo.a} vs ${cmpInfo.b}`
-    : 'Ranking de implementación CIMAS (revisa jueves)';
-
-  const ranked = dataA.map((pd,i) => ({
-    flag:pd.flag, key:pd.key, code:pd.code,
-    n: metricsA[i].n,
-    revisaA: metricsA[i].revisaJ,
-    revisaB: metricsB ? metricsB[i].revisaJ : null,
-  })).sort((a,b)=>(b.revisaA??-1)-(a.revisaA??-1));
-
-  document.getElementById('ranking-tbody').innerHTML = ranked.map((p,i) => {
-    const col = p.revisaA>=40?GREEN:p.revisaA>=20?ORANGE:RED;
-    if (!cmpInfo) {
-      return `<tr>
-        <td><span class="rank-num">${i+1}</span></td>
-        <td><strong>${p.flag} ${p.key}</strong></td>
-        <td style="color:#6B6B6B">${p.n}</td>
-        <td><div class="rank-bar-wrap">
-          <div class="rank-bar-track"><div class="rank-bar-fill" style="width:${p.revisaA??0}%;background:${col}"></div></div>
-          <span class="rank-pct" style="color:${col}">${p.revisaA??'—'}${p.revisaA!==null?'%':''}</span>
-        </div></td></tr>`;
-    } else {
-      const colB = p.revisaB>=40?GREEN:p.revisaB>=20?ORANGE:RED;
-      return `<tr>
-        <td><span class="rank-num">${i+1}</span></td>
-        <td><strong>${p.flag} ${p.key}</strong></td>
-        <td style="color:#6B6B6B">${p.n}</td>
-        <td><div style="display:flex;flex-direction:column;gap:3px">
-          <div class="rank-bar-wrap">
-            <div class="rank-bar-track"><div class="rank-bar-fill" style="width:${p.revisaA??0}%;background:${GREEN};opacity:.85"></div></div>
-            <span style="font-size:11px;font-weight:600;color:${GREEN};width:38px;text-align:right">${p.revisaA??'—'}${p.revisaA!==null?'%':''}</span>
-          </div>
-          <div class="rank-bar-wrap">
-            <div class="rank-bar-track"><div class="rank-bar-fill" style="width:${p.revisaB??0}%;background:${ORANGE};opacity:.85"></div></div>
-            <span style="font-size:11px;font-weight:600;color:${ORANGE};width:38px;text-align:right">${p.revisaB??'—'}${p.revisaB!==null?'%':''}</span>
-            ${deltaCell(p.revisaA,p.revisaB)}
-          </div>
-        </div></td></tr>`;
-    }
-  }).join('');
 
   // ── HEATMAPS
   const indDefs = [
@@ -842,6 +768,79 @@ function renderRegional(dataA, dataB, cmpInfo) {
   }).join('');
 }
 
+// ── PARTICIPATION & WEIGHT ────────────────────────────────────────────────────
+function renderParticipacionRegional(activeRev) {
+  const section = document.getElementById('participation-section');
+  const weightWrap = document.getElementById('weight-grid-wrap');
+
+  if (activeRev === 'all') {
+    section.style.display = 'block';
+    weightWrap.style.display = 'none';
+    const ctx = document.getElementById('chartParticipacion');
+    if (chartParticipacion) { chartParticipacion.destroy(); chartParticipacion = null; }
+
+    const datasets = revisions.map((rev, ri) => {
+      const colors = ['rgba(29,158,117,0.75)','rgba(186,117,23,0.75)','rgba(192,57,43,0.65)','rgba(24,95,165,0.65)','rgba(142,68,173,0.65)','rgba(52,73,94,0.65)'];
+      return {
+        label: rev,
+        data: rawData.map(pd => (revCountsByPais[pd.key]||{})[rev] || 0),
+        backgroundColor: colors[ri % colors.length],
+        borderRadius: 3,
+      };
+    });
+
+    chartParticipacion = new Chart(ctx, {
+      type: 'bar',
+      data: { labels: rawData.map(p => p.code), datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { size: 10 }, boxWidth: 10, padding: 8 } },
+          tooltip: {
+            mode: 'index',
+            callbacks: {
+              label: c => ` ${c.dataset.label}: ${c.parsed.y} respuestas`,
+              footer: items => ` Total: ${items.reduce((s,i)=>s+i.parsed.y,0)} respuestas`
+            }
+          }
+        },
+        scales: {
+          x: { stacked: true, grid: { display: false }, ticks: { font: { size: 11 } } },
+          y: { stacked: true, grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { font: { size: 11 } } }
+        }
+      }
+    });
+  } else {
+    section.style.display = 'none';
+    weightWrap.style.display = 'block';
+    document.getElementById('weight-grid-title').textContent = `Peso estadístico por país — ${activeRev}`;
+
+    // Avg n per revision per country
+    const avgByPais = rawData.map(pd => {
+      const counts = revCountsByPais[pd.key] || {};
+      const vals = Object.values(counts);
+      return vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : 0;
+    });
+
+    document.getElementById('weight-grid').innerHTML = rawData.map((pd, i) => {
+      const counts = revCountsByPais[pd.key] || {};
+      const n = counts[activeRev] || 0;
+      // Use Rev 1 as baseline (first revision found for this country)
+      const rev1Key = revisions[0];
+      const baseN = counts[rev1Key] || 1;
+      const ratio = n / baseN;
+      let level, icon;
+      if (ratio >= 0.75)      { level='high';   icon='●'; }
+      else if (ratio >= 0.50) { level='medium'; icon='◑'; }
+      else                    { level='low';    icon='○'; }
+      return `<div class="weight-chip ${level}">
+        <div><span class="weight-chip-country">${pd.flag} ${pd.key}</span></div>
+        <div class="weight-chip-detail">${icon} ${n} resp. · ${Math.round(ratio*100)}% de Rev 1 (${baseN})</div>
+      </div>`;
+    }).join('');
+  }
+}
+
 // ── FETCH ─────────────────────────────────────────────────────────────────────
 async function fetchPais(pais, chip) {
   chip.classList.add('loading');
@@ -865,6 +864,16 @@ async function init() {
     list.appendChild(chip); return chip;
   });
   rawData = await Promise.all(PAISES.map((p,i) => fetchPais(p,chips[i])));
+
+  // Build revCounts per country
+  rawData.forEach(pd => {
+    const iRev = idxH(pd.headers, "Número de revisión");
+    revCountsByPais[pd.key] = {};
+    pd.rows.forEach(r => {
+      const rv = (r[iRev]||'').toString().trim();
+      if (rv) revCountsByPais[pd.key][rv] = (revCountsByPais[pd.key][rv]||0) + 1;
+    });
+  });
 
   // Collect all revisions across all countries
   revisions = [...new Set(rawData.flatMap(pd => {
