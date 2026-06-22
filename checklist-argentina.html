@@ -137,6 +137,18 @@ body { font-family:'Inter',sans-serif; background:var(--gray-bg); color:var(--te
 .donut-legend-item { display:flex; align-items:center; gap:5px; font-size:12px; color:var(--text-muted); }
 .donut-swatch { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
 
+
+/* PARTICIPATION CHART */
+.participation-card { background:var(--white); border:1px solid var(--gray-border); border-radius:12px; padding:1.25rem; margin-bottom:1.5rem; }
+.participation-title { font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:1rem; }
+/* WEIGHT BADGE */
+.weight-banner { display:flex; align-items:center; gap:10px; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1.25rem; font-size:12.5px; line-height:1.4; }
+.weight-banner.high   { background:var(--green-light); border:1px solid #A8DFC9; color:#0A5A3A; }
+.weight-banner.medium { background:var(--orange-light); border:1px solid #F0C97A; color:#7A4A0A; }
+.weight-banner.low    { background:var(--red-light); border:1px solid #F5B8B0; color:var(--red-dark); }
+.weight-icon { font-size:16px; flex-shrink:0; }
+.weight-n { font-weight:600; }
+
 .footer { text-align:center; padding:2rem; font-size:11.5px; color:var(--text-muted); border-top:1px solid var(--gray-border); line-height:1.6; }
 </style>
 </head>
@@ -185,6 +197,13 @@ body { font-family:'Inter',sans-serif; background:var(--gray-bg); color:var(--te
 
 <div class="container" id="main-content" style="display:none">
   <div class="nota" id="nota-fiabilidad"></div>
+  <div id="participation-section" style="display:none">
+    <div class="participation-card">
+      <div class="participation-title">Participación por revisión</div>
+      <div style="position:relative;height:140px;"><canvas id="chartParticipacion"></canvas></div>
+    </div>
+  </div>
+  <div id="weight-banner-wrap" style="display:none"></div>
   <div class="section">
     <div class="section-title">Embudo de implementación CIMAS</div>
     <div class="embudo">
@@ -237,7 +256,7 @@ const PAIS_DISPLAY = "Argentina";
 
 const RED="#C0392B", GREEN="#1D9E75", ORANGE="#BA7517", BLUE="#185FA5", GRAY="#B4B2A9";
 
-let allRows = [], headers = [], iMap = {}, revisions = [], currentMode = 'filter', chartEnfoque = null, chartIngreso = null;
+let allRows = [], headers = [], iMap = {}, revisions = [], revCounts = {}, currentMode = 'filter', chartEnfoque = null, chartIngreso = null, chartParticipacion = null;
 
 // ── UTILS ────────────────────────────────────────────────────────────────────
 const pctSi = (rows, i) => {
@@ -319,6 +338,7 @@ function filterByRevision(rev) {
   const filtered = rev === 'all' ? allRows : allRows.filter(r => (r[iMap.revision]||"").toString().trim() === rev);
   updateBadge(filtered.length);
   renderSingle(filtered, null, null);
+  renderParticipacion();
 }
 
 function updateBadge(n) {
@@ -557,6 +577,63 @@ function animateBars() {
 }
 
 // ── LOAD ─────────────────────────────────────────────────────────────────────
+// ── PARTICIPATION CHART & WEIGHT BADGE ───────────────────────────────────────
+function renderParticipacion() {
+  const section = document.getElementById('participation-section');
+  const bannerWrap = document.getElementById('weight-banner-wrap');
+  const activeRev = document.querySelector('.rev-btn.active')?.dataset.rev || 'all';
+
+  if (activeRev === 'all') {
+    section.style.display = 'block';
+    bannerWrap.style.display = 'none';
+    const ctx = document.getElementById('chartParticipacion');
+    if (chartParticipacion) { chartParticipacion.destroy(); chartParticipacion = null; }
+    const labels = revisions;
+    const values = revisions.map(r => revCounts[r] || 0);
+    const total = values.reduce((a,b) => a+b, 0);
+    chartParticipacion = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{ data: values, borderRadius: 4, borderSkipped: false,
+          backgroundColor: values.map(v => {
+            const p = v/total;
+            return p >= 0.3 ? 'rgba(29,158,117,0.75)' : p >= 0.1 ? 'rgba(186,117,23,0.75)' : 'rgba(192,57,43,0.65)';
+          })
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: {
+          label: c => ` ${c.parsed.y} respuestas (${Math.round(c.parsed.y/total*100)}% del total)`
+        }}},
+        scales: {
+          x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+          y: { grid: { color: '#F0EEE8' }, ticks: { font: { size: 11 } } }
+        }
+      }
+    });
+  } else {
+    section.style.display = 'none';
+    const n = revCounts[activeRev] || 0;
+    const avgN = allRows.length / revisions.length;
+    const ratio = n / avgN;
+    let level, icon, msg;
+    if (ratio >= 0.7) {
+      level = 'high'; icon = '●';
+      msg = `Peso estadístico <strong>alto</strong> — <span class="weight-n">${n} respuestas</span> en esta revisión (promedio: ${Math.round(avgN)} por revisión). Los porcentajes son representativos.`;
+    } else if (ratio >= 0.25) {
+      level = 'medium'; icon = '◑';
+      msg = `Peso estadístico <strong>medio</strong> — <span class="weight-n">${n} respuestas</span> en esta revisión vs. promedio de ${Math.round(avgN)}. Interpretar tendencias con precaución.`;
+    } else {
+      level = 'low'; icon = '○';
+      msg = `Peso estadístico <strong>bajo</strong> — solo <span class="weight-n">${n} respuestas</span> en esta revisión vs. promedio de ${Math.round(avgN)}. Los porcentajes son poco representativos.`;
+    }
+    bannerWrap.style.display = 'block';
+    bannerWrap.innerHTML = `<div class="weight-banner ${level}"><span class="weight-icon">${icon}</span><span>${msg}</span></div>`;
+  }
+}
+
 async function loadData() {
   try {
     const res = await fetch(`${ENDPOINT}?action=pais&pais=${encodeURIComponent(PAIS)}`);
@@ -564,6 +641,12 @@ async function loadData() {
     headers = json.headers.map(h=>h.toString().trim());
     allRows = json.rows;
     iMap = buildIndexMap(headers);
+
+    // Build revision counts
+    allRows.forEach(r => {
+      const rv = (r[iMap.revision]||'').toString().trim();
+      if (rv) revCounts[rv] = (revCounts[rv]||0) + 1;
+    });
 
     // Get unique revisions sorted
     revisions = [...new Set(allRows.map(r=>(r[iMap.revision]||"").toString().trim()))]
