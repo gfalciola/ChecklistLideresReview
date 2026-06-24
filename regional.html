@@ -640,6 +640,20 @@ function filterByRevision(rev) {
 }
 
 // ── COMPARE MODE ──────────────────────────────────────────────────────────────
+function updateCmpN() {
+  const a = document.getElementById('cmp-a').value;
+  const b = document.getElementById('cmp-b').value;
+  if (!rawData || !rawData.length) return;
+  const countForRev = (rev) => rawData.reduce((s, pd) => {
+    const iRev = idxH(pd.headers, "Número de revisión");
+    return s + filterRows(pd.rows, iRev, rev).length;
+  }, 0);
+  const nA = countForRev(a);
+  const nB = countForRev(b);
+  document.getElementById('cmp-a-n').textContent = nA ? `n=${nA}` : '';
+  document.getElementById('cmp-b-n').textContent = nB ? `n=${nB}` : '';
+}
+
 function runCompare() {
   const a = document.getElementById('cmp-a').value;
   const b = document.getElementById('cmp-b').value;
