@@ -727,7 +727,9 @@ async function loadData() {
       const sel = document.getElementById(id);
       sel.innerHTML = revisions.map(r=>`<option value="${r}">${r}</option>`).join('');
       sel.selectedIndex = idx < revisions.length ? idx : 0;
+      sel.onchange = () => updateCmpN();
     });
+    updateCmpN();
 
     // Show UI
     document.getElementById('hero-loading').style.display = 'none';
@@ -737,6 +739,7 @@ async function loadData() {
     document.getElementById('rev-controls').style.display = 'flex';
     document.getElementById('main-content').style.display = 'block';
 
+    document.getElementById('rev-n-badge').style.display = 'inline';
     filterByRevision('all');
   } catch(e) {
     document.getElementById('hero-loading').innerHTML =
