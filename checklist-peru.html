@@ -57,7 +57,8 @@ body { font-family:'Inter',sans-serif; background:var(--gray-bg); color:var(--te
 .rev-compare-btn { padding:5px 14px; font-size:12px; font-weight:600; border:none; border-radius:6px; background:var(--red); color:white; cursor:pointer; transition:opacity .15s; }
 .rev-compare-btn:hover { opacity:.85; }
 .rev-n-badge { font-size:11px; color:var(--text-muted); }
-.rev-n-sub { font-size:10px; color:var(--text-muted); }
+.rev-n-label { font-size:10px; color:var(--text-muted); margin-bottom:1px; }
+.rev-n-sub { font-size:11px; font-weight:600; color:var(--text); }
 .rev-warning { font-size:11px; color:var(--orange); font-weight:500; }
 
 /* CONTAINER */
@@ -187,18 +188,20 @@ body { font-family:'Inter',sans-serif; background:var(--gray-bg); color:var(--te
   <div id="filter-mode" class="rev-filter-btns"></div>
   <!-- COMPARE MODE -->
   <div id="compare-mode" style="display:none" class="rev-compare-wrap">
-    <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
       <select class="rev-select" id="cmp-a"></select>
+      <span class="rev-n-label">Cantidad de respuestas</span>
       <span class="rev-n-sub" id="cmp-a-n"></span>
     </div>
     <span>vs</span>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
       <select class="rev-select" id="cmp-b"></select>
+      <span class="rev-n-label">Cantidad de respuestas</span>
       <span class="rev-n-sub" id="cmp-b-n"></span>
     </div>
     <button class="rev-compare-btn" onclick="runCompare()">Comparar</button>
   </div>
-  <span class="rev-n-badge" id="rev-n-badge"></span>
+  <span class="rev-n-badge" id="rev-n-badge" style="display:none"></span>
   <span class="rev-warning" id="rev-warning"></span>
 </div>
 
@@ -338,6 +341,7 @@ function setMode(mode) {
   document.querySelectorAll('.rev-mode-tab').forEach((t,i)=>t.classList.toggle('active', (i===0&&mode==='filter')||(i===1&&mode==='compare')));
   document.getElementById('filter-mode').style.display   = mode==='filter'  ? 'flex' : 'none';
   document.getElementById('compare-mode').style.display  = mode==='compare' ? 'flex' : 'none';
+  document.getElementById('rev-n-badge').style.display   = mode==='filter'  ? 'inline' : 'none';
   if (mode==='filter') {
     filterByRevision(document.querySelector('.rev-btn.active')?.dataset.rev || 'all');
   } else {
@@ -373,8 +377,8 @@ function updateCmpN() {
   const nB = revCounts[b] || 0;
   const elA = document.getElementById('cmp-a-n');
   const elB = document.getElementById('cmp-b-n');
-  if (elA) elA.textContent = `${nA} respuestas`;
-  if (elB) elB.textContent = `${nB} respuestas`;
+  if (elA) elA.textContent = nA ? nA.toLocaleString() : '—';
+  if (elB) elB.textContent = nB ? nB.toLocaleString() : '—';
 }
 
 function runCompare() {
