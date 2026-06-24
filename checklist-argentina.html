@@ -57,6 +57,7 @@ body { font-family:'Inter',sans-serif; background:var(--gray-bg); color:var(--te
 .rev-compare-btn { padding:5px 14px; font-size:12px; font-weight:600; border:none; border-radius:6px; background:var(--red); color:white; cursor:pointer; transition:opacity .15s; }
 .rev-compare-btn:hover { opacity:.85; }
 .rev-n-badge { font-size:11px; color:var(--text-muted); }
+.rev-n-sub { font-size:10px; color:var(--text-muted); }
 .rev-warning { font-size:11px; color:var(--orange); font-weight:500; }
 
 /* CONTAINER */
@@ -186,9 +187,15 @@ body { font-family:'Inter',sans-serif; background:var(--gray-bg); color:var(--te
   <div id="filter-mode" class="rev-filter-btns"></div>
   <!-- COMPARE MODE -->
   <div id="compare-mode" style="display:none" class="rev-compare-wrap">
-    <select class="rev-select" id="cmp-a"></select>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+      <select class="rev-select" id="cmp-a"></select>
+      <span class="rev-n-sub" id="cmp-a-n"></span>
+    </div>
     <span>vs</span>
-    <select class="rev-select" id="cmp-b"></select>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+      <select class="rev-select" id="cmp-b"></select>
+      <span class="rev-n-sub" id="cmp-b-n"></span>
+    </div>
     <button class="rev-compare-btn" onclick="runCompare()">Comparar</button>
   </div>
   <span class="rev-n-badge" id="rev-n-badge"></span>
@@ -353,12 +360,23 @@ function filterByRevision(rev) {
 }
 
 function updateBadge(n) {
-  document.getElementById('rev-n-badge').textContent = `n = ${n}`;
+  document.getElementById('rev-n-badge').textContent = `${n} respuestas incluidas`;
   const warn = document.getElementById('rev-warning');
   warn.textContent = n < 15 && n > 0 ? '⚠ Muestra pequeña, interpretar con cautela' : '';
 }
 
 // ── COMPARE ──────────────────────────────────────────────────────────────────
+function updateCmpN() {
+  const a = document.getElementById('cmp-a')?.value;
+  const b = document.getElementById('cmp-b')?.value;
+  const nA = revCounts[a] || 0;
+  const nB = revCounts[b] || 0;
+  const elA = document.getElementById('cmp-a-n');
+  const elB = document.getElementById('cmp-b-n');
+  if (elA) elA.textContent = `${nA} respuestas`;
+  if (elB) elB.textContent = `${nB} respuestas`;
+}
+
 function runCompare() {
   const a = document.getElementById('cmp-a').value;
   const b = document.getElementById('cmp-b').value;
